@@ -1,0 +1,130 @@
+/* VARIABLES */
+:root {
+    /* COlORS */
+    --primary-panel-color: #2a262e;
+    --secondary-panel-color: #3b3245;
+    --gradient-dark: #4e465e;
+    --gradient-light: #635f72;
+    --muted-outline: #736e81;
+    --shadow: rgba(0, 0, 0, 0.529);
+    --light-shadow: rgb(255, 255, 255);
+    --btn-hover-primary: #837e93;
+    --transparent: #e6e6e600;
+}
+
+/* MAIN */
+.main {
+    height: 100vh;
+}
+
+.main-content {
+    background-image: linear-gradient(180deg, var(--primary-panel-color) 20%, var(--secondary-panel-color) 90%);
+}
+
+/* PANELS */
+.panel {
+    background-color: var(--secondary-panel-color);
+    /* border: 1px solid var(--muted-outline); */
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--shadow);
+    padding: 20px;
+    /* margin: 10px; */
+    color: white;
+    height: 100%;
+}
+
+
+/* LOGO */
+@media (prefers-reduced-motion: no-preference) {
+    .app-logo {
+      animation: app-logo-spin infinite 20s linear;
+    }
+}
+  
+@keyframes app-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.app-logo {
+    height: 6vmin; 
+    pointer-events: none;
+    margin-bottom: 7px;
+}
+
+.logo {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px;
+    border-radius: 7px;
+    text-align: center;
+    filter: drop-shadow(1px 2px 10px var(--shadow));
+    pointer-events: none;
+}
+
+
+/* NAVBAR */
+.custom-nav-btn:hover {
+    background-color: var(--btn-hover-primary) !important;
+    box-shadow: 0px 0px 10px var(--shadow);
+}
+
+.custom-nav-btn {    
+    font-size: 1pc;
+    text-shadow: 4px 3px 9px rgba(0,0,0,1);
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 100%;
+    border: none;
+    border-radius: 0px !important;
+    /* Clear to show background */
+    background-color: var(--transparent);
+}
+
+.custom-nav {
+    padding: 0;
+    margin: 0;
+}
+
+.custom-navbar {
+    background-image: linear-gradient(45deg, var(--gradient-dark) 5%, var(--gradient-light) 25%);
+}
+
+.nav-buttons-container {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.nav-buttons-end {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding: 0;
+}
+
+.custom-nav-collapse {
+    padding: 0;
+    margin: 0;
+}
+
+
+/* FONT AWESOME ICONS */
+.icon {
+    font-size: 1.5pc;
+    filter: drop-shadow(4px 3px 3px var(--shadow));
+}
+
+
+/* TEXT COLOR */
+h1, h2, h3, h4, h5, h6 {
+    color: white;
+}
+
+
+
