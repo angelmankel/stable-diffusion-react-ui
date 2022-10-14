@@ -1,17 +1,3 @@
-/* VARIABLES */
-:root {
-    /* COlORS */
-    --primary-panel-color: #2a262e;
-    --secondary-panel-color: #3b3245;
-    --gradient-dark: #4e465e;
-    --gradient-light: #635f72;
-    --muted-outline: #736e81;
-    --shadow: rgba(0, 0, 0, 0.529);
-    --light-shadow: rgb(255, 255, 255);
-    --btn-hover-primary: #837e93;
-    --transparent: #e6e6e600;
-}
-
 /* MAIN */
 .main {
     height: 100vh;
