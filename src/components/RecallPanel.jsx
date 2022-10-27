@@ -12,8 +12,8 @@ function RecallPanel(props) {
         box-shadow: 0px 3px 8px var(--shadow);
         margin: 6.5px;
         flex-grow: ${props => (props.grow || 1)};
-        display: flex;
-        flex-direction: column;
+        /* overflow-y: scroll; */
+        
     `
     return (
         <PanelContainer grow={props.grow}>{props.children}</PanelContainer>

@@ -25,7 +25,7 @@ function Navbar(props) {
         <NavButton click={() => {console.log("test")}} icon={<Icon ico={faImages}/>}>Gallery</NavButton>
         <NavButton click={() => {console.log("test")}} icon={<Icon ico={faToolbox}/>}>Post-Processing</NavButton>
         <NavButton click={() => {console.log("test")}} icon={<Icon ico={faCircleInfo}/>}>About</NavButton>
-        <NavButton click={() => {console.log("test")}} icon={<Icon ico={faCog}/>}>Settings</NavButton>    
+        <NavButton click={() => {console.log("test")}} icon={<Icon ico={faCog}/>}>Settings</NavButton> 
     </Nav>
   )
 }

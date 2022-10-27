@@ -1,23 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
+import Panel from './Panel'
+import Image from './Image'
 
+// const Container = styled.div`
+//     display: flex;
+//     flex-direction: row;
+//     flex-grow: 2;
+// `
 
+function RecentImagesPanel(props) {
 
-function RecallPanel(props) {
-
-    const PanelContainer = styled.div`
-        background-color: var(--primary-panel-color);
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0px 3px 8px var(--shadow);
-        margin: 6.5px;
-        flex-grow: ${props => (props.grow || 1)};
-        display: flex;
-        flex-direction: column;
-    `
     return (
-        <PanelContainer grow={props.grow}>{props.children}</PanelContainer>
+        <Panel>
+            {/* <Image src={"https://via.placeholder.com/150"} /> */}
+            sdfsdf
+        </Panel>
     )
 }
 
-export default RecallPanel
+export default RecentImagesPanel

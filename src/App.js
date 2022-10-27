@@ -15,27 +15,24 @@ import PanelColumn from './components/PanelColumn';
 import MainContainer from './components/MainContainer';
 import RecallPanel from './components/RecallPanel';
 import PromptPanel from './components/PromptPanel';
+import Input from './components/Input';
+import RecentImagesPanel from './components/RecentImagesPanel';
+import CollapsablePanel from './components/CollapsablePanel';
+import Slider from './components/Slider';
 
 const LeftArea = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 7;
+  flex-grow: 1;
 `
 const RightArea = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 `
-
-const TopRow = styled.div`
+const WorkArea = styled.div`
   display: flex;
   height: 100%;
-`
-
-const BottomRow = styled.div`
-  display: flex;
-  height: 100%;
-  height: 40%;
 `
 
 function App() {
@@ -47,58 +44,19 @@ function App() {
         <Navbar />
         {/* CONTENT */}
         <Container>
-          {/* LEFT CONTAINER */}
-          <LeftArea>
-            {/* LEFT CONTAINER TOP ROW */}
-            <TopRow>
-              <RecallPanel>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"/>
-              </RecallPanel>
-              <PromptPanel grow={7}>
-                <label>Prompt</label>
-                <textarea id="w3review" name="w3review" rows="2" cols="100"></textarea>
-                <img src="https://cdn2.iconfinder.com/data/icons/essential-web-5/50/placeholder-dash-dot-disapear-frame-512.png" alt="Girl in a jacket" width="512" height="512"></img>
-              </PromptPanel>
-            </TopRow>
-            {/* LEFT CONTAINER BOTTOM ROW */}
-            <BottomRow>
-              <Panel>
-                <div>RECENT IMAGES</div> 
-              </Panel>
-            </BottomRow>
-          </LeftArea>
-          {/* RIGHT CONTAINER */}
-          <RightArea>
-            {/* SETTINGS PANEL */}
-            <Panel>
-              <div>SETTINGS PANEL</div>
-            </Panel>
-          </RightArea>
+
+          {/* Settings */}
+          <CollapsablePanel side={'right'} grow={3}>
+            <Slider type="range" min="1" max="100" value="50" id="myRange" />
+          </CollapsablePanel>
+
+          {/* Prompt Area */}
+          <PromptPanel grow={8} />
+          {/* <PromptPanel grow={10} /> */}
+
+          {/* Recent Images */}
+          <CollapsablePanel side={'left'} grow={4} />
+
         </Container>
     </MainContainer>
   )
