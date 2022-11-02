@@ -19,6 +19,7 @@ function CollapsablePanel(props) {
         flex-grow: ${props => (props.grow || 1)};
         display: flex;
         flex-direction: row;
+        flex-shrink: 0;
     `
     const Button = styled.button`
         background-color: var(--gradient-dark);

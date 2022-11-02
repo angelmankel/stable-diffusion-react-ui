@@ -3,14 +3,25 @@ import styled from 'styled-components'
 import TextArea from './TextArea'
 
 const Img = styled.img`
-  margin-top: 25px;
-  margin-bottom: 25px;
-  /* height: 100%; */
-  flex-grow: 1;
-  image-resolution: 1024px;
-  object-fit: fill;
-  box-shadow: 0px 3px 8px var(--shadow);
-  border-radius: 7px;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    box-shadow: 0px 3px 8px var(--shadow);
+    border-radius: 7px;
+`
+
+const ImageContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+
+    /* background-color: #225c8f; */
+    width: 1024px;
+    height: 100%;
+    object-fit: cover;
+
 `
 
 const PromptContainer = styled.div`
@@ -20,6 +31,30 @@ const PromptContainer = styled.div`
     box-shadow: 0px 3px 8px var(--shadow);
     width: 75%;
     border-radius: 10px;
+`
+
+const GenerateButton = styled.button`
+    width: fit-content;
+    align-self: center;
+    background-color: var(--primary-panel-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0px 3px 8px var(--shadow);
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        background-color: var(--muted-outline);
+    }
+
+`
+
+const PromptInput = styled(TextArea)`
+    flex-grow: 1;
 `
 
 function PromptPanel(props) {
@@ -35,13 +70,18 @@ function PromptPanel(props) {
         flex-direction: column;
         align-items: center;
         justify-content: start;
+        gap: 10px;
     `
     return (
         <PanelContainer grow={props.grow}>
             <PromptContainer>
-                <TextArea>Prompt</TextArea>
+                <PromptInput>Prompt</PromptInput>
+                <GenerateButton onClick={() => props.Generate()}>Generate</GenerateButton>
             </PromptContainer>
-            <Img src="https://i.pinimg.com/736x/d6/90/95/d69095c461cec89c4469425dc1fd23e6.jpg" alt="test" />
+            <ImageContainer>
+                <Img src={props.currentImage} alt="test" />
+                {/* test */}
+            </ImageContainer>
         </PanelContainer>
     )
 
