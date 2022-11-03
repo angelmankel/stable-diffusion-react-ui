@@ -1,38 +1,23 @@
 import React from 'react'
 import { useState, useLayoutEffect, useEffect, useRef } from 'react'
 import styled from 'styled-components';
-import { css } from 'styled-components';
-// CSS
-import './App.css';
-import './css/custom.css';
+
+// import './App.css';
+// import './css/custom.css';
 import './css/Variables.css';
+import './css/flex.css';
+
 // COMPONENTS
 import Navbar from './components/Navbar.jsx';
-import Container from './components/Container';
-import Panel from './components/Panel';
-import PanelRow from './components/PanelRow';
-import PanelColumn from './components/PanelColumn';
-import MainContainer from './components/MainContainer';
-import RecallPanel from './components/RecallPanel';
-import PromptPanel from './components/PromptPanel';
-import Input from './components/Input';
-import RecentImagesPanel from './components/RecentImagesPanel';
-import CollapsablePanel from './components/CollapsablePanel';
-import Slider from './components/CustomSlider';
+import PromptBar from './components/SecondaryNavbar';
+import GenerationSettings from './components/GenerationSettings';
 
-const LeftArea = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-`
-const RightArea = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-`
-const WorkArea = styled.div`
-  display: flex;
-  height: 100%;
+  height: 100vh;
+  /* background-color: var(--primary-panel-color); */
+  background: linear-gradient(0deg, var(--gradient-dark) 0%, var(--gradient-light) 100%);
 `
 
 function App() {
@@ -90,27 +75,31 @@ function App() {
   }
 
   return (  
-    // FULL HEIGHT CONTAINER
-    <MainContainer>
-        {/* NAVBAR */}
+    <Container>
+      <div className='main-nav'>
         <Navbar />
-        {/* CONTENT */}
-        <Container>
+      </div>
 
-          {/* Settings */}
-          <CollapsablePanel side={'right'} grow={3}>
-            <Slider type="range" min="1" max="100" value="50" id="myRange" />
-          </CollapsablePanel>
+      <div className='secondary-nav'>
+        <PromptBar />
+      </div>
 
-          {/* Prompt Area */}
-          <PromptPanel currentImage={currentImage} Generate={Generate} grow={8} />
-          {/* <PromptPanel grow={10} /> */}
-
-          {/* Recent Images */}
-          <CollapsablePanel side={'left'} grow={4} />
-
-        </Container>
-    </MainContainer>
+      <div className='main-container'>
+        
+        <div className='col-1'>
+          <GenerationSettings className='settings' />
+        </div>
+          
+        <div className='col-2'>
+          <div className='image-area'>Image Area</div>
+        </div>
+        
+        <div className='col-3'>
+          <div className='recents'>Recent Images</div>
+        </div>
+      
+      </div>
+    </Container>
   )
 
 }

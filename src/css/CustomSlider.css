@@ -1,0 +1,108 @@
+.label-container {
+    color: var(--primary-text-color);
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label {
+    font-size: 1em;
+    margin-left: 5px;
+}
+
+.input {
+    width: 100px;
+    border-radius: 10px;
+    color: var(--primary-text-color);
+    background-color: var(--secondary-panel-color);
+    border: none;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+    
+}
+
+.slider-container {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.slider-button {
+    width: 40px;
+    height: 15px;
+    background-color: var(--primary-panel-color);
+    border: none;
+    color: var(--primary-text-color);
+    font-size: 1em;
+    font-weight: 600;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.plus { 
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.minus {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.slider-button:hover {
+    background-color: var(--btn-hover-primary);
+}
+
+.icon {
+    font-size: 0.75em;
+}
+
+.rc-slider-rail {
+    margin-top: -6px;
+    height: 15px;
+    border-radius: 0px;
+    background-color: var(--primary-panel-color);
+
+    box-shadow: inset 0px 0px 2.75px 2.5px var(--shadow);
+}
+
+.rc-slider-track {
+    margin-top: -6px;
+    height: 15px;
+    background-color: var(--primary-panel-color);
+    border-radius: 0px;
+
+    box-shadow: inset 0px 0px 2.75px 2.5px var(--shadow);
+    
+}
+
+.rc-slider-handle {
+    margin-top: -11px;
+    width: 25px;
+    height: 25px;
+    background-color: var(--primary-text-color);
+    opacity: 1;
+    border: 2px solid var(--secondary-panel-color);
+    box-shadow: 0px 0px 10px var(--shadow);  
+}
+
+.rc-slider-handle:hover {
+    border: 2px solid var(--muted-outline);
+}
+
+.rc-slider-handle-dragging {
+    box-shadow: 0px 0px 0px 5px var(--muted-outline) !important;
+    border: none !important;
+    cursor: default;
+    
+}
+
+.rc-slider-step {
+   
+}
+

@@ -4,9 +4,7 @@ import styled from 'styled-components';
 const Button = styled.div`
   cursor: pointer;
   text-shadow: 4px 3px 9px rgba(0,0,0,1);
-  height: 100%;
   user-select: none;
-  margin: 5px;
   color: white;
   padding-left: 20px;
   padding-right: 20px;

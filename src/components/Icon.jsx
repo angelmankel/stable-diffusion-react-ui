@@ -5,13 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
     color: white;
     filter: drop-shadow(0px 0px 5px rgba(0,0,0,1));
-    margin-right: 7px;
-    font-size: 1.5vw;
+    font-size: 2.5em;
 `
 
 function Icon(props) {
   return (
-    <StyledFontAwesomeIcon icon={props.ico}/>
+    <FontAwesomeIcon className={props.className} icon={props.ico}/>
   )
 }
 

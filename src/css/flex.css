@@ -1,0 +1,41 @@
+.main-nav {
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+}
+
+.secondary-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.col-1 {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+.col-2 {
+    flex-grow: 1;
+}
+
+.col-3 {
+    width: 512px;
+    flex-shrink: 0;
+}
+
+.settings {
+    background-color: rgb(76, 0, 255);
+}
+.image-area {
+    background-color: rgb(0, 255, 191);
+}
+.recents {
+    background-color: rgb(255, 0, 212);
+}

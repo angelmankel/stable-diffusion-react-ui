@@ -1,97 +1,74 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import styled from 'styled-components';
+import Input from './Input.jsx';
+import '../css/CustomSlider.css';
+// import SliderTooltip from 'rc-slider';
+// import styled from 'styled-components';
+import Icon from './Icon.jsx';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
-// const StyledSlider = styled.input`
-//   -webkit-appearance: none;  /* Override default CSS styles */
-//   appearance: none;
-//   width: 100%; /* Full-width */
-//   height: 25px; /* Specified height */
-//   background: var(--secondary-panel-color); /* Grey background */
-//   outline: none; /* Remove outline */
-//   opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-//   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-//   transition: opacity .2s;
-//   border-radius: 5px;
+const ActiveMark = styled.div`
+    color: var(--primary-text-color);
+    font-weight: bold;
+`
 
-//   &:hover {
-//     opacity: 1; /* Fully shown on mouse-over */
-//   }
+const LabelContainer = styled.div`
+    color: var(--primary-text-color);
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* gap: 10px; */
+`
 
-//   &::-webkit-slider-thumb {
-//     -webkit-appearance: none; /* Override default look */
-//     appearance: none;
-//     width: 35px; /* Set a specific slider handle width */
-//     height: 35px; /* Slider handle height */
-//     background: var(--muted-outline); /* Green background */
-//     cursor: pointer; /* Cursor on hover */
-//     border-radius: 20px;
+function CustomSlider(props) {
 
-//   }
+    const [value, setValue] = useState(props.defaultValue);
+    const [marks, setMarks] = useState(props.marks ? GenerateMarks(props.step) : 0);
 
+    function GenerateMarks(steps) {
+        let marks = {}
 
-// `
+        for (let i = 0; i < props.max + 1; i += steps) {
+            marks[i] = i === value ? <ActiveMark>{i}</ActiveMark> : i;
+        }
 
-// const Container = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     flex-grow: 1;
-//     align-items: center;
-//     padding: 20px;
-// `
+        return marks
+    }
 
-// const Label = styled.label`
-//     color: white;
-// `
+    function HandleChange(e) {
+        setValue(e)
+    }
 
-// const Value =  styled.div`
-//     position: absolute;
-// `
+    function HandleInputChange(e) {
+        setValue(e.target.value)
+    }
 
-// const SliderContainer = styled.div`
+    function Increment(val) {
+        if (value + val >= props.max) {
+            setValue(props.max)
+        } else if (value + val <= props.min) {
+            setValue(props.min)
+        } else {
+            setValue(value + val)
+        }
+    }
 
-// `
-
-function CustomSlider() {
-    
     return (
         <>
-        <Slider />
-        {/* <Range /> */}
+        <div className='label-container'>
+            <label className='label'>{props.children}</label>
+            <input className='input' onChange={HandleInputChange} value={value} type="text" />
+        </div>
+        <div className='slider-container'>
+            <button onClick={() => Increment(-props.step)} className='slider-button minus'><Icon className="icon" ico={faMinus}></Icon></button>
+            <Slider marks={marks} step={props.step} min={props.min} max={props.max} onChange={HandleChange} value={value}></Slider>
+            <button onClick={() => Increment(props.step)} className='slider-button plus'><Icon className="icon" ico={faPlus}></Icon></button>
+        </div>
         </>
     )
-
-    // const [increment, setIncrement] = useState(10)
-    // const [value, setValue] = useState(50)
-  
-    // useEffect(() => {
-    //     console.log(value)
-    // }, [value])
-
-    // function UpdateSliderValue(e) {
-    //     if (e.target.value % increment === 0 || e.target.value < increment) {
-            
-    //         if (e.target.value < increment)
-    //         {
-    //             setValue(1)
-    //         } else {
-    //             setValue(e.target.value)
-    //         }
-    //     }
-    // }
-
-    // return (
-    //     <Container>
-    //         <Label>Test</Label>
-            
-    //         <SliderContainer>
-    //             <Value>{value}</Value>
-    //             <StyledSlider onInput={UpdateSliderValue} type="range" min="1" max="100" value={value} />
-    //         </SliderContainer>
-    //     </Container>
-    // )
 }
 
 export default CustomSlider

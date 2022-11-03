@@ -3,26 +3,22 @@ import logo from '../img/logo.png';
 import styled from 'styled-components';
 
 const Logo = styled.div`
-    height: 100%;
-    margin-left: 50px;
-    margin-right: 50px;
-
     display: flex;
     flex-direction: column;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     text-shadow: 0px 0px 6px #000000;
+
+    margin-left: 30px;
 `
 
 const Img = styled.img`
-    height: 2vw;
-    margin-bottom: 5px;
-    margin-top: 7px;
+    height: 45px;
     filter: drop-shadow(0px 0px 10px #c7c7c761);
 `
 
 const Text = styled.h6`
-    font-size: 1vw;
+    font-size: 15px;
     margin: 0px;
     color: white;
 `
@@ -30,7 +26,7 @@ const Text = styled.h6`
 function NavLogo(props) {
   return (
     <Logo>
-        <Img role="img" src={logo} aria-label="logo" />
+        <Img src={logo} />
         <Text>{props.children}</Text>
     </Logo>
   )
