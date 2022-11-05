@@ -11,6 +11,7 @@ import './css/flex.css';
 import Navbar from './components/Navbar.jsx';
 import PromptBar from './components/SecondaryNavbar';
 import GenerationSettings from './components/GenerationSettings';
+import ImageCanvas from './windows/ImageCanvas';
 
 const Container = styled.div`
   display: flex;
@@ -69,7 +70,6 @@ function App() {
     
     fetch("http://192.168.1.162:7860/sdapi/v1/txt2img", requestOptions)
       .then(response => response.text())
-      // .then(result => console.log(result))
       .then(result => setCurrentImage(JSON.parse(result).images[0]))
       .catch(error => console.log('error', error));
   }
@@ -91,7 +91,7 @@ function App() {
         </div>
           
         <div className='col-2'>
-          <div className='image-area'>Image Area</div>
+          <ImageCanvas />
         </div>
         
         <div className='col-3'>

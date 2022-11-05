@@ -6,21 +6,22 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
+    width: 100%;
 `
 
 function CustomSwitch(props) {
     const [checked, setChecked] = useState(false);
 
-    function handleChange(checked) {
-        setChecked(checked)
-    }
+    // function handleChange(checked) {
+    //     setChecked(checked)
+    // }
 
     return (
         <Container>
             <label className='label'>{props.children}</label>
             <Switch 
-                onChange={handleChange} 
-                checked={checked}
+                onChange={props.onChange} 
+                checked={props.checked}
                 onColor="#3b3245"
                 onHandleColor="#ffffff"
                 handleDiameter={30}

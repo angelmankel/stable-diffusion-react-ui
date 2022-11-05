@@ -78,14 +78,28 @@ const OuterContainer = styled.div`
 `
 
 function InputWithIncrement(props) {
-    const [value, setValue] = useState(-1);
+    const [value, setValue] = useState(GetRandom());
 
     function HandleChange(e) {
-        setValue(parseInt(e.target.value) === NaN ? -1 : parseInt(e.target.value))
+        
+        if (!isNaN(parseInt(e.target.value))) {
+            setValue((parseInt(e.target.value)))
+            return
+        }
+
+        return
     }
 
     function Increment(val) {
         setValue(value + val)
+    }
+
+    function GetRandom() {
+        return Math.floor(Math.random() * 100000000)
+    }
+
+    function SetRandom(num) {
+        isNaN(setValue(num)) ? setValue(GetRandom()) : setValue(num)
     }
 
     return (
@@ -97,7 +111,7 @@ function InputWithIncrement(props) {
                     <Input value={value} onChange={HandleChange}/>
                     <RightButton onClick={() => Increment(1)}>+</RightButton>
                 </InputContainer>
-                <RandButton><Icon ico={faDice}/></RandButton>
+                <RandButton onClick={() => SetRandom(GetRandom())}><Icon ico={faDice}/></RandButton>
             </Container>
         </OuterContainer>
     )

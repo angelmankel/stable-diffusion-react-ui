@@ -3,6 +3,12 @@ import styled from 'styled-components'
 import Select from 'react-select';
 import '../css/CustomDropdown.css';
 
+const Container = styled.label`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`
+
 const options = [
     { value: 'Euler a', label: 'Euler a' },
     { value: 'Euler', label: 'Euler' },
@@ -22,7 +28,7 @@ function Dropdown(props) {
     const [selectedOption, setSelectedOption] = useState(options[0]);
 
     return (
-    <>
+    <Container>
         <label className='label'>Sampler</label>
         <Select
             className='custom-select-container'
@@ -32,7 +38,7 @@ function Dropdown(props) {
             options={options}
             // menuIsOpen={true}
         />
-    </>
+    </Container>
     )
 }
 

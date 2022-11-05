@@ -8,6 +8,7 @@ const Image = styled.img`
     background-color: var(--muted-outline);
     align-self: center;
     margin-top: 10px;
+    flex-shrink: 0;
 `
 
 function ImageInput() {
