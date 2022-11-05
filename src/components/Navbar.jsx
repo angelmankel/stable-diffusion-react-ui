@@ -7,7 +7,7 @@ import '../css/navbar.css';
 
 
 const Nav = styled.div`
-    height: 75px;
+    height: var(--navbar-height);
     background-color: var(--primary-panel-color);
     box-shadow: 0px 0px 10px var(--shadow);
     flex-grow: 1;

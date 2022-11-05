@@ -1,6 +1,4 @@
 .label-container {
-    color: var(--primary-text-color);
-    font-weight: bold;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -8,6 +6,8 @@
 }
 
 .label {
+    color: var(--primary-text-color);
+    font-weight: bold;
     font-size: 1em;
     margin-left: 5px;
 }

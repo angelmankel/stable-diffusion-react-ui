@@ -13,6 +13,7 @@
 .main-container {
     display: flex;
     flex-direction: row;
+    height: calc(100vh - calc(var(--navbar-height) + var(--secondary-navbar-height)));
 }
 
 

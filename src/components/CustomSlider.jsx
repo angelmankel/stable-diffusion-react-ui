@@ -20,7 +20,6 @@ const LabelContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    /* gap: 10px; */
 `
 
 function CustomSlider(props) {
@@ -57,17 +56,17 @@ function CustomSlider(props) {
     }
 
     return (
-        <>
-        <div className='label-container'>
-            <label className='label'>{props.children}</label>
-            <input className='input' onChange={HandleInputChange} value={value} type="text" />
+        <div>
+            <div className='label-container'>
+                <label className='label'>{props.children}</label>
+                <input className='input' onChange={HandleInputChange} value={value} type="text" />
+            </div>
+            <div className='slider-container'>
+                <button onClick={() => Increment(-props.step)} className='slider-button minus'><Icon className="icon" ico={faMinus}></Icon></button>
+                <Slider className='slider' marks={marks} step={props.step} min={props.min} max={props.max} onChange={HandleChange} value={value}></Slider>
+                <button onClick={() => Increment(props.step)} className='slider-button plus'><Icon className="icon" ico={faPlus}></Icon></button>
+            </div>
         </div>
-        <div className='slider-container'>
-            <button onClick={() => Increment(-props.step)} className='slider-button minus'><Icon className="icon" ico={faMinus}></Icon></button>
-            <Slider marks={marks} step={props.step} min={props.min} max={props.max} onChange={HandleChange} value={value}></Slider>
-            <button onClick={() => Increment(props.step)} className='slider-button plus'><Icon className="icon" ico={faPlus}></Icon></button>
-        </div>
-        </>
     )
 }
 

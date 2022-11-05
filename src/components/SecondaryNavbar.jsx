@@ -11,7 +11,7 @@ import TextArea from './TextArea.jsx';
 import Button from './Button.jsx';
 
 const Nav = styled.div`
-    height: 80px;
+    height: var(--secondary-navbar-height);
     background-color: var(--primary-panel-color);
     box-shadow: 0px 0px 10px var(--shadow);
     flex-grow: 1;
