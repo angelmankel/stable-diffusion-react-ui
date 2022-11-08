@@ -63,7 +63,7 @@ function CustomSlider(props) {
             </div>
             <div className='slider-container'>
                 <button onClick={() => Increment(-props.step)} className='slider-button minus'><Icon className="icon" ico={faMinus}></Icon></button>
-                <Slider className='slider' marks={marks} step={props.step} min={props.min} max={props.max} onChange={HandleChange} value={value}></Slider>
+                <Slider setValue={setValue} className='slider' marks={marks} step={props.step} min={props.min} max={props.max} onChange={HandleChange} value={value}></Slider>
                 <button onClick={() => Increment(props.step)} className='slider-button plus'><Icon className="icon" ico={faPlus}></Icon></button>
             </div>
         </div>

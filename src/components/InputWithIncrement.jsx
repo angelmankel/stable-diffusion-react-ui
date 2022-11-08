@@ -78,7 +78,7 @@ const OuterContainer = styled.div`
 `
 
 function InputWithIncrement(props) {
-    const [value, setValue] = useState(GetRandom());
+    const [value, setValue] = useState(props.defaultSettings.seed === 'Random' ? GetRandom() : props.defaultSettings.seed);
 
     function HandleChange(e) {
         

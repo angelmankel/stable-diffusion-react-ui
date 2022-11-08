@@ -25,17 +25,18 @@ const Container = styled.div`
     margin-right: 7px;
 `
 
-function GenerationSettings() {
+function GenerationSettings(props) {
+
     return (
         <OuterContainer>
             <Container>
-                <Dropdown></Dropdown>
-                <CustomSlider step={5} marks={false} min={1} max={15} defaultValue={1}>Number of Images</CustomSlider>
-                <CustomSlider step={128} marks={false} min={128} max={2048} defaultValue={512}>Width</CustomSlider>
-                <CustomSlider step={128} marks={false} min={128} max={2048} defaultValue={512}>Height</CustomSlider>
-                <CustomSlider step={0.01} marks={false} min={0.1} max={1} defaultValue={0.75}>CFG Scale</CustomSlider>
-                <CustomSlider step={1} marks={false} min={1} max={150} defaultValue={50}>Steps</CustomSlider>            
-                <InputWithIncrement>Seed</InputWithIncrement>
+                <Dropdown defaultSettings={props.defaultSettings}></Dropdown>
+                <CustomSlider step={5} marks={false} min={1} max={15} defaultValue={props.defaultSettings.batch_size}>Number of Images</CustomSlider>
+                <CustomSlider step={128} marks={false} min={128} max={2048} defaultValue={props.defaultSettings.width}>Width</CustomSlider>
+                <CustomSlider step={128} marks={false} min={128} max={2048} defaultValue={props.defaultSettings.height}>Height</CustomSlider>
+                <CustomSlider step={1} marks={false} min={1} max={50} defaultValue={props.defaultSettings.cfg_scale}>CFG Scale</CustomSlider>
+                <CustomSlider step={1} marks={false} min={1} max={150} defaultValue={props.defaultSettings.steps}>Steps</CustomSlider>            
+                <InputWithIncrement defaultSettings={props.defaultSettings}>Seed</InputWithIncrement>
                 <OptionalSettings />
             </Container>
         </OuterContainer>
