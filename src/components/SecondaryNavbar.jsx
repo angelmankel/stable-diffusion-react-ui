@@ -27,8 +27,8 @@ function SecondaryNavbar(props) {
         <Button>Button 3</Button>
       </div>
       <div className='panel-2'>
-        <TextArea />
-        <TextArea />
+        <TextArea text={props.settings.prompt} setSettings={(val) => props.setSettings({...props.settings, prompt : val})}/>
+        <TextArea text={props.settings.negative_prompt} setSettings={(val) => props.setSettings({...props.settings, negative_prompt : val})}/>
       </div>
       <div className='panel-3'>
         <Button>Generate</Button>

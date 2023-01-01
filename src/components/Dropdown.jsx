@@ -26,7 +26,7 @@ const options = [
 
 function Dropdown(props) {
     
-    const [selectedOption, setSelectedOption] = useState(options[options.findIndex(option => option.value === props.defaultSettings.sampler)]);
+    const [selectedOption, setSelectedOption] = useState(options[options.findIndex(option => option.value === props.settings.sampler)]);
 
     return (
     <Container>

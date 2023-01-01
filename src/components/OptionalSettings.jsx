@@ -57,7 +57,19 @@ function OptionalSettings(props) {
         </Container>
         <ContentContainer>
             { variationSeed ? <InputWithIncrement>Variation Seed</InputWithIncrement> : null }
-            { imageInput ? <><ImageInput /><CustomSlider step={0.01} marks={false} min={0.1} max={1} defaultValue={0.75}>Denoising Strength</CustomSlider></> : null }
+            { imageInput ? 
+            <>
+                <ImageInput inputImage={props.inputImage} />
+                <CustomSlider 
+                    step={0.01} 
+                    marks={false} 
+                    min={0.1} 
+                    max={1} 
+                    defaultValue={0.75}
+                    setSettings={(val) => props.setSettings({...props.settings, batch_size : val})}
+                    value={props.value}
+                >Denoising Strength</CustomSlider>
+            </> : null }
         </ContentContainer>
         </>
     )

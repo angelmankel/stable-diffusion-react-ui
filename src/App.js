@@ -7,7 +7,7 @@ import './css/flex.css';
 
 // COMPONENTS
 import Navbar from './components/Navbar.jsx';
-import PromptBar from './components/SecondaryNavbar';
+import SecondaryNavbar from './components/SecondaryNavbar';
 import GenerationSettings from './components/GenerationSettings';
 import ImageCanvas from './windows/ImageCanvas';
 
@@ -23,7 +23,7 @@ function App() {
   const [defaultSettings, setDefaultSettings] = useState(
     {
       "enable_hr": false,
-      "denoising_strength": 0,
+      "denoising_strength": 0.7,
       "firstphase_width": 0,
       "firstphase_height": 0,
       "prompt": "a crocodile eating a carrot",
@@ -35,7 +35,7 @@ function App() {
       "subseed_strength": 0,
       "seed_resize_from_h": -1,
       "seed_resize_from_w": -1,
-      "batch_size": 8,
+      "batch_size": 1,
       "n_iter": 1,
       "steps": 10,
       "cfg_scale": 7,
@@ -54,16 +54,22 @@ function App() {
     }
   )
 
-  const [txt2img, setTxt2img] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
+  const [settings, setSettings] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
+
+  // console.log(settings.negative_prompt)
+  // console.log(settings.prompt)
+  console.log(settings)
+  // console.log('------------------------------')
 
   // "https://i.pinimg.com/736x/d6/90/95/d69095c461cec89c4469425dc1fd23e6.jpg"
   const [currentImage, setCurrentImage] = useState("https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg")
+  const [inputImage, setInputImage] = useState("https://i.pinimg.com/736x/d6/90/95/d69095c461cec89c4469425dc1fd23e6.jpg")
 
   function Generate() {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     
-    var raw = JSON.stringify(txt2img);
+    var raw = JSON.stringify(settings);
     
     var requestOptions = {
       method: 'POST',
@@ -72,7 +78,7 @@ function App() {
       redirect: 'follow'
     };
     
-    fetch("http://192.168.1.162:7860/sdapi/v1/txt2img", requestOptions)
+    fetch("http://192.168.1.162:7860/sdapi/v1/settings", requestOptions)
       .then(response => response.text())
       .then(result => setCurrentImage(JSON.parse(result).images[0]))
       .catch(error => console.log('error', error));
@@ -85,24 +91,24 @@ function App() {
       </div>
 
       <div className='secondary-nav'>
-        <PromptBar txt2img={txt2img} setTxt2img={setTxt2img} />
+        <SecondaryNavbar settings={settings} setSettings={setSettings} />
       </div>
 
-      {/* <div className='main-container'>
+      <div className='main-container'>
         
         <div className='col-1'>
-          <GenerationSettings txt2img={txt2img} setTxt2img={setTxt2img} className='settings' />
+          <GenerationSettings settings={settings} inputImage={inputImage} setSettings={setSettings} className='settings' />
         </div>
           
-        <div className='col-2'>
-          <ImageCanvas txt2img={txt2img} setTxt2img={setTxt2img} />
-        </div>
+        {/* <div className='col-2'>
+          <ImageCanvas settings={settings} setSettings={setSettings} />
+        </div> */}
         
-        <div className='col-3'>
+        {/* <div className='col-3'>
           <div className='recents'>Recent Images</div>
-        </div>
+        </div> */}
       
-      </div> */}
+      </div>
     </Container>
   )
 

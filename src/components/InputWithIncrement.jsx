@@ -78,12 +78,12 @@ const OuterContainer = styled.div`
 `
 
 function InputWithIncrement(props) {
-    const [value, setValue] = useState(props.defaultSettings.seed === 'Random' ? GetRandom() : props.defaultSettings.seed);
+    const [value, setValue] = useState(props.value === 'Random' ? GetRandom() : props.value);
 
     function HandleChange(e) {
         
         if (!isNaN(parseInt(e.target.value))) {
-            setValue((parseInt(e.target.value)))
+            props.setSettings(parseInt(e.target.value))
             return
         }
 
@@ -91,7 +91,8 @@ function InputWithIncrement(props) {
     }
 
     function Increment(val) {
-        setValue(value + val)
+        props.setSettings(props.value + val)
+        // setValue(value + val)
     }
 
     function GetRandom() {
@@ -99,7 +100,7 @@ function InputWithIncrement(props) {
     }
 
     function SetRandom(num) {
-        isNaN(setValue(num)) ? setValue(GetRandom()) : setValue(num)
+        isNaN(props.setSettings(num)) ? props.setSettings(GetRandom()) : props.setSettings(num)
     }
 
     return (
@@ -108,7 +109,7 @@ function InputWithIncrement(props) {
             <Container>
                 <InputContainer>
                     <LeftButton onClick={() => Increment(-1)}>-</LeftButton>
-                    <Input value={value} onChange={HandleChange}/>
+                    <Input value={props.value} onChange={HandleChange}/>
                     <RightButton onClick={() => Increment(1)}>+</RightButton>
                 </InputContainer>
                 <RandButton onClick={() => SetRandom(GetRandom())}><Icon ico={faDice}/></RandButton>

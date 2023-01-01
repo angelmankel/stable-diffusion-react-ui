@@ -46,12 +46,15 @@ function CustomSlider(props) {
     }
 
     function Increment(val) {
-        if (value + val >= props.max) {
-            setValue(props.max)
-        } else if (value + val <= props.min) {
-            setValue(props.min)
+        if (props.value + val >= props.max) {
+            // setValue(props.max)
+            props.setSettings(props.max)
+        } else if (props.value + val <= props.min) {
+            // setValue(props.min)
+            props.setSettings(props.min)
         } else {
-            setValue(value + val)
+            // setValue(value + val)
+            props.setSettings(props.value + val)
         }
     }
 
@@ -59,11 +62,22 @@ function CustomSlider(props) {
         <div>
             <div className='label-container'>
                 <label className='label'>{props.children}</label>
-                <input className='input' onChange={HandleInputChange} value={value} type="text" />
+                <input className='input' onChange={(e) => props.setSettings(e.target.value < 1 ? 1 : parseInt(e.target.value))}  value={props.value} type="text" />
             </div>
             <div className='slider-container'>
                 <button onClick={() => Increment(-props.step)} className='slider-button minus'><Icon className="icon" ico={faMinus}></Icon></button>
-                <Slider setValue={setValue} className='slider' marks={marks} step={props.step} min={props.min} max={props.max} onChange={HandleChange} value={value}></Slider>
+                
+                <Slider
+                setValue={setValue} 
+                className='slider'
+                marks={marks}
+                step={props.step}
+                min={props.min}
+                max={props.max} 
+                onChange={(e) => props.setSettings(e)} 
+                value={props.value}
+                ></Slider>
+
                 <button onClick={() => Increment(props.step)} className='slider-button plus'><Icon className="icon" ico={faPlus}></Icon></button>
             </div>
         </div>

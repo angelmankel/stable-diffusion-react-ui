@@ -9,11 +9,14 @@ const Image = styled.img`
     align-self: center;
     margin-top: 10px;
     flex-shrink: 0;
+
+    // Might need to change this to cover
+    object-fit: contain;
 `
 
-function ImageInput() {
+function ImageInput(props) {
   return (
-    <Image src="" alt="Image" />
+    <Image src={props.inputImage} alt="Image" />
   )
 }
 
