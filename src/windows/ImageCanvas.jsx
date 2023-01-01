@@ -33,7 +33,7 @@ const Canvas = styled.img`
 `
 
 
-function ImageCanvas() {
+function ImageCanvas(props) {
 
   return (
     <Container>

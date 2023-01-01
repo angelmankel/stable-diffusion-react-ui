@@ -2,8 +2,6 @@ import React from 'react'
 import { useState, useLayoutEffect, useEffect, useRef } from 'react'
 import styled from 'styled-components';
 
-// import './App.css';
-// import './css/custom.css';
 import './css/Variables.css';
 import './css/flex.css';
 
@@ -17,45 +15,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  /* background-color: var(--primary-panel-color); */
   background: linear-gradient(0deg, var(--gradient-dark) 0%, var(--gradient-light) 100%);
 `
 
 function App() {
-
-  const [txt2imgSettings, setTxt2imgSettings] = useState(
-    {
-      "enable_hr": false,
-      "denoising_strength": 0,
-      "firstphase_width": 0,
-      "firstphase_height": 0,
-      "prompt": "a crocodile eating a carrot",
-      "styles": [
-        "string"
-      ],
-      "seed": -1,
-      "subseed": -1,
-      "subseed_strength": 0,
-      "seed_resize_from_h": -1,
-      "seed_resize_from_w": -1,
-      "batch_size": 8,
-      "n_iter": 1,
-      "steps": 10,
-      "cfg_scale": 7,
-      "width": 1024,
-      "height": 512,
-      "restore_faces": false,
-      "tiling": false,
-      "negative_prompt": "string",
-      "eta": 0,
-      "s_churn": 0,
-      "s_tmax": 0,
-      "s_tmin": 0,
-      "s_noise": 1,
-      "override_settings": {},
-      "sampler_index": "Euler"
-    }
-  );
 
   const [defaultSettings, setDefaultSettings] = useState(
     {
@@ -80,7 +43,7 @@ function App() {
       "height": 512,
       "restore_faces": false,
       "tiling": false,
-      "negative_prompt": "string",
+      "negative_prompt": "(bad_prompt:0.8), ugly, deformed",
       "eta": 0,
       "s_churn": 0,
       "s_tmax": 0,
@@ -89,7 +52,9 @@ function App() {
       "override_settings": {},
       "sampler": "Euler"
     }
-  );
+  )
+
+  const [txt2img, setTxt2img] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
 
   // "https://i.pinimg.com/736x/d6/90/95/d69095c461cec89c4469425dc1fd23e6.jpg"
   const [currentImage, setCurrentImage] = useState("https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg")
@@ -98,7 +63,7 @@ function App() {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     
-    var raw = JSON.stringify(txt2imgSettings);
+    var raw = JSON.stringify(txt2img);
     
     var requestOptions = {
       method: 'POST',
@@ -120,24 +85,24 @@ function App() {
       </div>
 
       <div className='secondary-nav'>
-        <PromptBar defaultSettings={defaultSettings} setTxt2imgSettings={setTxt2imgSettings} />
+        <PromptBar txt2img={txt2img} setTxt2img={setTxt2img} />
       </div>
 
-      <div className='main-container'>
+      {/* <div className='main-container'>
         
         <div className='col-1'>
-          <GenerationSettings defaultSettings={defaultSettings} setTxt2imgSettings={setTxt2imgSettings} className='settings' />
+          <GenerationSettings txt2img={txt2img} setTxt2img={setTxt2img} className='settings' />
         </div>
           
         <div className='col-2'>
-          <ImageCanvas defaultSettings={defaultSettings} setTxt2imgSettings={setTxt2imgSettings} />
+          <ImageCanvas txt2img={txt2img} setTxt2img={setTxt2img} />
         </div>
         
         <div className='col-3'>
           <div className='recents'>Recent Images</div>
         </div>
       
-      </div>
+      </div> */}
     </Container>
   )
 

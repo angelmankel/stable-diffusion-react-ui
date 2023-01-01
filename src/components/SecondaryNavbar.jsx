@@ -1,12 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBrush, faCircleInfo, faCog, faImages, faPalette, faToolbox } from '@fortawesome/free-solid-svg-icons'
-import NavButton from './NavButton.jsx';
-import NavLogo from './NavLogo';
-import Icon from './Icon';
 import '../css/navbar.css';
-import logo from '../img/logo.png';
 import TextArea from './TextArea.jsx';
 import Button from './Button.jsx';
 
