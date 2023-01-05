@@ -4,16 +4,16 @@
     z-index: 1;
 }
 
-.secondary-nav {
+/* .secondary-nav {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-}
+    background-color: aqua;
+} */
 
 .main-container {
     display: flex;
     flex-direction: row;
-    height: calc(100vh - calc(var(--navbar-height) + var(--secondary-navbar-height)));
+    height: calc(var(--doc-height) - calc(var(--navbar-height) + var(--secondary-navbar-height)));
 }
 
 
@@ -24,11 +24,13 @@
 
 .col-2 {
     flex-grow: 1;
+    /* flex-shrink: 1; */
 }
 
 .col-3 {
-    width: 512px;
-    flex-shrink: 0;
+    /* width: 512px; */
+    width: 15%;
+    flex-shrink: 1;
 }
 
 .settings {

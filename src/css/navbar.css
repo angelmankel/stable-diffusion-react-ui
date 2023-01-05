@@ -47,20 +47,20 @@
     justify-content: end;
 }
 
-.panel-2 {
-    flex-grow: 2;
+.prompt-panel {
+    flex-grow: 1;
     display: flex;
     justify-content: space-evenly;
     gap: 10px;
     flex-shrink: 0;
 }
 
-.panel-3 {
+.buttons-panel {
     flex-grow: 1;
     flex-basis: 0;
     margin-right: 10px;
 
     display: flex;
-    gap: 5px;
-    justify-content: start;  
+    gap: 1px;
+    justify-content: center;  
 }

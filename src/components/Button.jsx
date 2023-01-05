@@ -8,12 +8,15 @@ const StyledButton = styled.button`
     color: #ffffffbc;
     padding: 10px;
     resize: none;
-
+    cursor: pointer;
+    &:hover {
+        background-color: var(--btn-hover-primary);
+    }
 `
 
 function Button(props) {
   return (
-    <StyledButton>{props.children}</StyledButton>
+    <StyledButton className={props.className} onClick={props.onClick}>{props.children}</StyledButton>
   )
 }
 

@@ -8,7 +8,9 @@ const StyledInput = styled.textarea`
     border-radius: 5px;
     color: #ffffffbc;
     font-family: 'Roboto', sans-serif;
-    padding: 10px;
+    font-size: 17px;
+    text-shadow: 2px 2px 5px #0000008f;
+    padding: 15px;
     flex-grow: 1;
     resize: none;
 `

@@ -2,9 +2,10 @@ import React from 'react'
 import 'rc-slider/assets/index.css';
 import styled from 'styled-components';
 import CustomSlider from './CustomSlider';
-import Dropdown from './Dropdown';
+import SamplerDropdown from './SamplerDropdown';
 import InputWithIncrement from './InputWithIncrement';
 import OptionalSettings from './OptionalSettings';
+import ModelDropdown from './ModelDropdown';
 
 const OuterContainer = styled.div`
     height: 100%;
@@ -21,13 +22,40 @@ const Container = styled.div`
     overflow-y: auto;
     margin-right: 7px;
 `
+const Status = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+
+const Loading = styled.div`
+    justify-content: space-around;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    background-color: #747286;
+    gap: 20px;
+    border-radius: 6px;
+    flex-grow: 1;
+    height: 50px;
+`
+
+
 
 function GenerationSettings(props) {
 
     return (
         <OuterContainer>
             <Container>
-                <Dropdown settings={props.settings}></Dropdown>
+                {/* <ModelDropdown 
+                    value={props.options.sd_model_checkpoint}
+                    setOptions={(val) => props.setOptions({...props.options, sd_model_checkpoint : val})}
+                ></ModelDropdown>
+                
+                <SamplerDropdown 
+                    value={props.settings.sampler_index}
+                    setSettings={(val) => props.setSettings({...props.settings, sampler_index : val})}
+                ></SamplerDropdown> */}
+
                 <CustomSlider step={1} marks={false} min={1} max={15} defaultValue={props.settings.batch_size}
                 setSettings={(val) => props.setSettings({...props.settings, batch_size : val})}
                 value={props.settings.batch_size}>Number of Images</CustomSlider>
@@ -55,8 +83,8 @@ function GenerationSettings(props) {
 
                 <OptionalSettings 
                 inputImage={props.inputImage}
-                setSettings={(val) => props.setSettings({...props.settings, denoising_strength : val})}
-                value={props.settings.denoising_strength}
+                setSettings={props.setSettings}
+                settings={props.settings}
                 />
             </Container>
         </OuterContainer>

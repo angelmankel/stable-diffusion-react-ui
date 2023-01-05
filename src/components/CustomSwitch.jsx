@@ -33,6 +33,7 @@ function CustomSwitch(props) {
                 width={48}
                 className="react-switch"
                 id="material-switch"
+                disabled={props.disabled}
             />
         </Container>
     )

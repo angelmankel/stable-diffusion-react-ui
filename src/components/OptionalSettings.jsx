@@ -9,6 +9,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    
 `
 const ContentContainer = styled.div`
     display: flex;
@@ -22,21 +23,26 @@ function OptionalSettings(props) {
     const [tiling, setTiling] = useState(false);
     const [restoreFaces, setRestoreFaces] = useState(false);
     const [variationSeed, setVariationSeed] = useState(false);
-    const [imageInput, setImageInput] = useState(true);
+    const [imageInput, setImageInput] = useState(false);
 
     function HandleChange(type, e) {
         switch (type) {
             case 'tiling':
-                setTiling(e);
+                // setTiling();
+                props.setSettings({...props.settings, tiling : e})
                 break;
             case 'restoreFaces':
-                setRestoreFaces(e);
+                // setRestoreFaces();
+                props.setSettings({...props.settings, restore_faces : e})
                 break;
+            // these need more work because they need booleans, but the settings only have numbers, need to make another state system for these probably
             case 'variationSeed':
-                setVariationSeed(e);
+                // setVariationSeed();
+                // props.setSettings({...props.settings, subs : e})
                 break;
             case 'imageInput':
-                setImageInput(e);
+                // setImageInput();
+                // props.setSettings({...props.settings, denoising_strength : e})
                 break;
             default:
                 break;
@@ -46,13 +52,14 @@ function OptionalSettings(props) {
     return (
         <>
         <Container>
-            <div>
-                <CustomSwitch checked={tiling} onChange={(e) => HandleChange('tiling', e)}>Tiling</CustomSwitch>
-                <CustomSwitch checked={restoreFaces} onChange={(e) => HandleChange('restoreFaces', e)}>Restore Faces</CustomSwitch>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
+                <CustomSwitch checked={props.settings.tiling} onChange={(e) => HandleChange('tiling', e)}>Tiling</CustomSwitch>
+                <CustomSwitch checked={props.settings.restore_faces} onChange={(e) => HandleChange('restoreFaces', e)}>Restore Faces</CustomSwitch>
             </div>
-            <div>
-                <CustomSwitch checked={variationSeed} onChange={(e) => HandleChange('variationSeed', e)}>Variation Seed</CustomSwitch>
-                <CustomSwitch checked={imageInput} onChange={(e) => HandleChange('imageInput', e)}>Image Input</CustomSwitch>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
+                <CustomSwitch disabled={true} checked={variationSeed} onChange={(e) => HandleChange('variationSeed', e)}>Variation Seed</CustomSwitch>
+                {/* Need to add something to set settings to img2img when this is turned on, for now always true */}
+                <CustomSwitch disabled={true} checked={imageInput} onChange={(e) => HandleChange('imageInput', e)}>Image Input</CustomSwitch>
             </div>
         </Container>
         <ContentContainer>
@@ -66,8 +73,8 @@ function OptionalSettings(props) {
                     min={0.1} 
                     max={1} 
                     defaultValue={0.75}
-                    setSettings={(val) => props.setSettings({...props.settings, batch_size : val})}
-                    value={props.value}
+                    setSettings={(val) => props.setSettings({...props.settings, denoising_strength : val})}
+                    value={props.settings.denoising_strength}
                 >Denoising Strength</CustomSlider>
             </> : null }
         </ContentContainer>

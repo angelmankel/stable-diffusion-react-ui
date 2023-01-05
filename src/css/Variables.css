@@ -13,8 +13,9 @@
     --primary-text-color: #e6e6e6;
 
     /* NAVBAR HEIGHTS */
-    --navbar-height: 75px;
-    --secondary-navbar-height: 80px;
+    --navbar-height: 85px;
+    --secondary-navbar-height: 200px;
+    --doc-height: 100%;
 }
 
 /* SCROLLBAR */

@@ -5,12 +5,14 @@ import NavLogo from '../components/NavLogo';
 import Icon from '../components/Icon';
 import '../css/navbar.css';
 
-
 const Nav = styled.div`
     height: var(--navbar-height);
     background-color: var(--primary-panel-color);
     box-shadow: 0px 0px 10px var(--shadow);
     flex-grow: 1;
+    
+    color: #ffffff;
+    font-size: 30px;
 
     /* Parent flex for nav buttons */
     display: flex;
@@ -19,6 +21,7 @@ const Nav = styled.div`
 `
 
 function Navbar(props) {
+  
   return (
     <Nav>
       <NavLogo>LUMINARY</NavLogo>
@@ -27,7 +30,6 @@ function Navbar(props) {
         <Icon ico={faPalette}/>
         <Icon ico={faImages}/>
         <Icon ico={faToolbox}/>
-        
       </div>
       <div className='buttons-group group-2'>
         <Icon ico={faCircleInfo}/>
