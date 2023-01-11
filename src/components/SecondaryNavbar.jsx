@@ -20,10 +20,16 @@ const Nav = styled.div`
     text-align: center;
     gap: 5px;
     z-index: 0;
-    padding-top: 5px;
-    padding-bottom: 15px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding: 15px;
+`
+
+const GenerateButton = styled(Button)`
+  background-color  : var(--contrast);
+  text-shadow: 1px 1px 5px black;
+`
+const CancelButton = styled(Button)`
+  background-color  : #a54646;
+  text-shadow: 1px 1px 5px black;
 `
 
 function SecondaryNavbar(props) {
@@ -56,7 +62,8 @@ function SecondaryNavbar(props) {
             setSettings={(val) => props.setSettings({...props.settings, sampler_index : val})}
         ></SamplerDropdown>
 
-        <Button onClick={props.Generate}>{Spinner ? Spinner : "Generate"}</Button>
+        <GenerateButton onClick={props.Generate}>{Spinner ? `Generating...${Math.round(props.progress * 100) / 100  * 100}%` : "Generate"}</GenerateButton>
+        <CancelButton onClick={props.Interrupt}>Cancel</CancelButton>
       </div>
       <div className='prompt-panel'>
         <TextArea text={props.settings.prompt} setSettings={(val) => props.setSettings({...props.settings, prompt : val})}/>

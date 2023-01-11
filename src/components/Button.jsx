@@ -8,6 +8,7 @@ const StyledButton = styled.button`
     color: #ffffffbc;
     padding: 10px;
     resize: none;
+    align-self: center;
     cursor: pointer;
     &:hover {
         background-color: var(--btn-hover-primary);

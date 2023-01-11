@@ -13,7 +13,9 @@
 .main-container {
     display: flex;
     flex-direction: row;
-    height: calc(var(--doc-height) - calc(var(--navbar-height) + var(--secondary-navbar-height)));
+    /* use this one when you bring the main navbar back */
+    /* height: calc(var(--doc-height) - calc(var(--navbar-height) + var(--secondary-navbar-height))); */
+    height: calc(var(--doc-height) - var(--secondary-navbar-height));
 }
 
 

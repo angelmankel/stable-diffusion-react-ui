@@ -27,6 +27,9 @@ function OptionalSettings(props) {
 
     function HandleChange(type, e) {
         switch (type) {
+            case 'hires':
+                props.setSettings({...props.settings, enable_hr : e})
+                break;
             case 'tiling':
                 // setTiling();
                 props.setSettings({...props.settings, tiling : e})
@@ -55,6 +58,7 @@ function OptionalSettings(props) {
             <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
                 <CustomSwitch checked={props.settings.tiling} onChange={(e) => HandleChange('tiling', e)}>Tiling</CustomSwitch>
                 <CustomSwitch checked={props.settings.restore_faces} onChange={(e) => HandleChange('restoreFaces', e)}>Restore Faces</CustomSwitch>
+                <CustomSwitch checked={props.settings.enable_hr} onChange={(e) => HandleChange('hires', e)}>Hi-Res Fix</CustomSwitch>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
                 <CustomSwitch disabled={true} checked={variationSeed} onChange={(e) => HandleChange('variationSeed', e)}>Variation Seed</CustomSwitch>

@@ -5,12 +5,20 @@ import styled from 'styled-components';
 import './css/Variables.css';
 import './css/flex.css';
 
+import Notif from './audio/notification.mp3';
+
 // COMPONENTS
 import Navbar from './components/Navbar.jsx';
 import SecondaryNavbar from './components/SecondaryNavbar';
 import GenerationSettings from './components/GenerationSettings';
 import ImageCanvas from './windows/ImageCanvas';
 import Gallery from './components/Gallery';
+
+const playAudio = () => {
+  let audio = new Audio(Notif)
+  audio.volume = 0.5;
+  audio.play(); 
+}
 
 const Container = styled.div`
   display: flex;
@@ -26,33 +34,49 @@ function App() {
 
   const [defaultSettings, setDefaultSettings] = useState(
     {
-      "enable_hr": true,
-      "prompt": "a sexy assassin wearing a tight fitting outfit. wide hips, big ass, big boobs, artgerm, jungle, sunny, god rays, 4k, 8k, dramatic lighting",
-      "seed": 67884558,
+      "enable_hr": false,
+      "prompt": "stone walls, overgrowth, jungle, sunny, god rays, 4k, 8k, dramatic lighting, Art Station, Award Winning, unreal engine, HDR, Ray Tracing, RTX, intricate designs, dim lighting, epic mural, modern art",
+      "seed": 6784558,
       "batch_size": 1,
       "steps": 20,
-      "cfg_scale": 8,
+      "cfg_scale": 7,
       "width": 512,
       "height": 512,
-      "restore_faces": true,
+      "restore_faces": false,
       "tiling": false,
-      "negative_prompt": "bloom, bad colors, smooth, deformed, ugly, creepy",
+      "negative_prompt": "(bad_prompt:0.8)",
       "sampler_index": "Euler a"
     }
   )
 
   const [settings, setSettings] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
   const [loading, setLoading] = useState(false)
-  const [currentImage, setCurrentImage] = useState("https://miro.medium.com/max/512/0*EC_IgNn7B1wj4-gw.png")
+  const [currentImage, setCurrentImage] = useState(null)
   const [inputImage, setInputImage] = useState(null)
+  const [progress, setProgress] = useState(0.01)
   const [galleryImgs, setgalleryImgs] = useState(null)
   const [options, setOptions] = useState(
     {
-      "jpeg_quality": 100,
+      "jpeg_quality": 80,
       "upscaler_for_img2img": "SwinIR_4x",
       "sd_model_checkpoint": "models\\Stable Diffusion\\v1-5-pruned-emaonly.ckpt [81761151]",
     }
   )
+
+  console.log(settings)
+
+  function Interrupt() {
+
+    var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
+    }
+
+    fetch("/sdapi/v1/interrupt", requestOptions)
+  }
 
   function SaveImageToDB(img) {
     var myHeaders = new Headers();
@@ -107,27 +131,29 @@ function App() {
         setgalleryImgs(newArr)
       })
       .then(() => setLoading(false))
+      .then(() => playAudio())
   }
 
   function Generate() {
     setLoading(true)
     
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(settings),
-      redirect: 'follow'
-    };
+    // var myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/json");
+    // var requestOptions = {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   body: JSON.stringify(settings),
+    //   redirect: 'follow'
+    // };
     
-    fetch("/sdapi/v1/txt2img", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        UpscaleImage(result) 
-        return result
-      })
-      .catch(error => console.log('error', error));
+    // fetch("/sdapi/v1/txt2img", requestOptions)
+    //   .then(response => response.json())
+    //   .then(result => {
+    //     UpscaleImage(result) 
+    //     return result
+    //   })
+      
+    //   .catch(error => console.log('error', error));
   }
 
   function GetImageLibrary() {
@@ -141,16 +167,8 @@ function App() {
     }
     
     fetch("/library", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        for (let i = 0; i < result.length; i++) {
-          result[i] = `data:image/png;charset=utf-8;base64,${result[i]}`
-        }
-
-        return result
-      })
-      
-      .then(result => setgalleryImgs(result.reverse()))
+      .then(response => response.json())      
+      .then(result => setgalleryImgs(result))
   }
 
   function SetModel(model) {
@@ -168,6 +186,7 @@ function App() {
 
     fetch("/sdapi/v1/options", requestOptions)
       .then(() => setLoading(false))
+ 
   }
 
   useEffect(() => {
@@ -178,14 +197,36 @@ function App() {
     SetModel(options.sd_model_checkpoint)
   }, [options])
 
+
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+
+      fetch("/sdapi/v1/progress?skip_current_image=false")
+      .then((result) => result.json())
+      .then((result) => {
+        if (result.progress > 0.01) {
+          setCurrentImage(`data:image/png;charset=utf-8;base64,${result.current_image}`)
+          setProgress(result.progress)
+        }
+      })
+
+    }, 500)
+
+    return () => {
+      clearInterval(interval)
+    }
+
+  }, [])
+
   return (  
     <Container>
-      <div className='main-nav'>
+      {/* <div className='main-nav'>
         <Navbar />
-      </div>
+      </div> */}
 
       <div className='secondary-nav'>
-        <SecondaryNavbar setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
+        <SecondaryNavbar Interrupt={Interrupt} progress={progress} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
       </div>
 
       <div className='main-container'>

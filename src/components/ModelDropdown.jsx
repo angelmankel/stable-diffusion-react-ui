@@ -34,7 +34,8 @@ function ModelDropdown(props) {
         .then(result => {
             let options = []
             for (let i = 0; i < result.length; i++) {
-                options.push({ value: `${result[i].title}`, label: `${result[i].model_name}` })
+                let name = result[i].filename.split("\\")
+                options.push({ value: `${result[i].title}`, label: `${name[name.length - 1]}` })
             }
 
             return options
