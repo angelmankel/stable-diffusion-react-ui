@@ -55,15 +55,14 @@ function App() {
   const [inputImage, setInputImage] = useState(null)
   const [progress, setProgress] = useState(0.01)
   const [galleryImgs, setgalleryImgs] = useState(null)
+  const [progressTickRate, setProgressTickRate] = useState(500)
   const [options, setOptions] = useState(
     {
       "jpeg_quality": 80,
       "upscaler_for_img2img": "SwinIR_4x",
-      "sd_model_checkpoint": "models\\Stable Diffusion\\v1-5-pruned-emaonly.ckpt [81761151]",
+      "sd_model_checkpoint": "Alien Landscapes\\alienLandscapes_alienLandscapes.ckpt [5222ef225a]",
     }
   )
-
-  console.log(settings)
 
   function Interrupt() {
 
@@ -135,31 +134,30 @@ function App() {
   }
 
   function Generate() {
+
+    fetch("/txt2img", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(settings)
+      })
+      .then(response => response.json())
+      .then(images =>  {
+        setCurrentImage(images)
+      })
+      // Make this only get the last image and not the entire library again
+      .then(() => GetImageLibrary())
+      .then(() => setLoading(false))
+      .then(() => playAudio())
+
     setLoading(true)
-    
-    // var myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/json");
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: JSON.stringify(settings),
-    //   redirect: 'follow'
-    // };
-    
-    // fetch("/sdapi/v1/txt2img", requestOptions)
-    //   .then(response => response.json())
-    //   .then(result => {
-    //     UpscaleImage(result) 
-    //     return result
-    //   })
-      
-    //   .catch(error => console.log('error', error));
   }
 
   function GetImageLibrary() {
     console.log("Fetching Images...")
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    var myHeaders = new Headers()
+    myHeaders.append("Content-Type", "application/json")
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,
@@ -173,6 +171,7 @@ function App() {
 
   function SetModel(model) {
 
+    // Change this to a designated model spinner
     setLoading(true)
 
     var myHeaders = new Headers();
@@ -206,12 +205,16 @@ function App() {
       .then((result) => result.json())
       .then((result) => {
         if (result.progress > 0.01) {
-          setCurrentImage(`data:image/png;charset=utf-8;base64,${result.current_image}`)
+
+          setCurrentImage(() => {
+            return [`data:image/png;charset=utf-8;base64,${result.current_image}`]
+          }) 
+
           setProgress(result.progress)
         }
       })
 
-    }, 500)
+    }, progressTickRate)
 
     return () => {
       clearInterval(interval)

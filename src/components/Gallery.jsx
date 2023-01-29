@@ -21,6 +21,8 @@ const handleDrag = (e) => {
     if (!e) return;
 }
 
+// Create on click event for each image that will open the non compressed version from the server. Need to have a ref to the image file name or something.
+
 function Gallery(props) {
 
   let images
@@ -28,7 +30,7 @@ function Gallery(props) {
   if (props.galleryImgs != null)
   {
     images = props.galleryImgs.map((img, index) =>
-      <img key={index} src={`${img}`} style={{"width" : "100%"}} />
+      <img onClick={() => console.log("worky!")} key={index} src={`${img}`} style={{"width" : "100%"}} />
     )
   }
 

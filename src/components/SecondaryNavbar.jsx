@@ -38,20 +38,7 @@ function SecondaryNavbar(props) {
 
   return (
     <Nav>
-      {/* <div className='panel-1'>
-        <Button>Undo</Button>
-        <Button>Button 2</Button>
-        <Button>Button 3</Button>
-      </div> */}
       <div className='buttons-panel'>
-        {/* <Button>Undo</Button>
-        <Button>Button 2</Button>
-        <Button>Button 3</Button> */}
-        {/* <Button onClick={props.GetImageLibrary}>Load History</Button> */}
-        {/* <Button>Button 1</Button>
-        <Button>Cancel</Button>
-        <Button>Button 2</Button>
-        <Button>Button 3</Button> */}
         <ModelDropdown 
             value={props.options.sd_model_checkpoint}
             setOptions={(val) => props.setOptions({...props.options, sd_model_checkpoint : val})}
