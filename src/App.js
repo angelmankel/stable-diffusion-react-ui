@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useLayoutEffect, useEffect, useRef, useMemo } from 'react'
 import styled from 'styled-components';
+import axios from 'axios';
 
 import './css/Variables.css';
 import './css/flex.css';
@@ -45,7 +46,8 @@ function App() {
       "restore_faces": false,
       "tiling": false,
       "negative_prompt": "(bad_prompt:0.8)",
-      "sampler_index": "Euler a"
+      "sampler_index": "Euler a",
+      "hr_upscaler": "SwinIR_4x",
     }
   )
 
@@ -60,7 +62,7 @@ function App() {
     {
       "jpeg_quality": 80,
       "upscaler_for_img2img": "SwinIR_4x",
-      "sd_model_checkpoint": "Alien Landscapes\\alienLandscapes_alienLandscapes.ckpt [5222ef225a]",
+      "sd_model_checkpoint": "Stable Diffusion\\v1-5-pruned-emaonly.ckpt [cc6cb27103]",
     }
   )
 
@@ -116,7 +118,6 @@ function App() {
     fetch("/sdapi/v1/extra-single-image", requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log(result)
         setCurrentImage(`data:image/png;charset=utf-8;base64,${result.image}`)
         return result
       })
@@ -166,7 +167,9 @@ function App() {
     
     fetch("/library", requestOptions)
       .then(response => response.json())      
-      .then(result => setgalleryImgs(result))
+      .then(result => {
+        setgalleryImgs(result)
+      })
   }
 
   function SetModel(model) {
@@ -193,9 +196,38 @@ function App() {
   }, [])
 
   useEffect(() => {
-    SetModel(options.sd_model_checkpoint)
-  }, [options])
+    
+    fetch("/gen-settings")
+    .then((result) => result.json())
+    .then((result) => setSettings(JSON.parse(result[0].gen_settings_inst)))
+    .then(() => console.log("Settings Loaded!"))
 
+  }, [])
+  
+  useEffect(() => {
+    axios({
+      method: 'post',
+      url: '/gen-settings',
+      data: settings
+    })
+  }, [settings])
+
+  useEffect(() => {
+  
+    // axios.get("/config")
+    // .then((result) => result.data)
+    // .then((result) => setOptions(JSON.parse(result[0].config)))
+    // .then(() => console.log("Config Loaded!"))
+
+  }, [])
+
+  useEffect(() => {
+    axios({
+      method: 'post',
+      url: '/config',
+      data: options
+    }).then(() => SetModel(options.sd_model_checkpoint))
+  }, [options])
 
   useEffect(() => {
 
@@ -212,6 +244,9 @@ function App() {
 
           setProgress(result.progress)
         }
+      })
+      .catch((error) => {
+        console.log("No connection to SD:", error)
       })
 
     }, progressTickRate)
@@ -243,7 +278,7 @@ function App() {
         </div>
         
         <div className='col-3'>
-          <Gallery galleryImgs={galleryImgs} />
+          <Gallery galleryImgs={galleryImgs} setCurrentImage={setCurrentImage} setSettings={setSettings}/>
         </div>
       
       </div>

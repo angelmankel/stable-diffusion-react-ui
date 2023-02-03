@@ -26,4 +26,18 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   )
+  app.use(
+    '/gen-settings',
+    createProxyMiddleware({
+      target: 'http://localhost:3001',
+      changeOrigin: true,
+    })
+  )
+  app.use(
+    '/config',
+    createProxyMiddleware({
+      target: 'http://localhost:3001',
+      changeOrigin: true,
+    })
+  )
 }

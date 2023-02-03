@@ -1,47 +1,53 @@
 import React from 'react'
 import '../Gallery.css';
 import styled from 'styled-components';
-
-const Column = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #565364;
-    padding: 10px;
-`;
+import Image from './Image';
 
 const Container = styled.div`
     overflow-y: scroll;
     max-height: 100%;
     min-width: 100%;
-    background-color: #565364;
-    z-index: -1;
+    background-color: var(--secondary-panel-color);
+    padding-top: 10px;
+    padding-bottom: 10px;
 `;
 
-const handleDrag = (e) => {
-    if (!e) return;
-}
+const Row = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+`;
 
 // Create on click event for each image that will open the non compressed version from the server. Need to have a ref to the image file name or something.
 
 function Gallery(props) {
+
+  function handleSingleClick(img) {
+    props.setCurrentImage([img.image])
+  }
+
+  function handleDoubleClick(img) {
+    props.setSettings(JSON.parse(img.parameters))
+    props.setCurrentImage([img.image])
+  }
 
   let images
 
   if (props.galleryImgs != null)
   {
     images = props.galleryImgs.map((img, index) =>
-      <img onClick={() => console.log("worky!")} key={index} src={`${img}`} style={{"width" : "100%"}} />
+      <Image onDoubleClick={() => handleDoubleClick(img)} onClick={() => handleSingleClick(img)} params={img.parameters} info={img.info} key={img.image_id} src={`${img.image}`} />
     )
   }
 
-
   return (
     <Container>
-      <div className="row"> 
-        <div className="column">
-          {images}
-        </div>
-      </div>
+      <Row> 
+        {images}
+      </Row>
     </Container>
 
     /* <div className="column">

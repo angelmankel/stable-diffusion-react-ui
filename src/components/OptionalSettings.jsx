@@ -4,6 +4,7 @@ import CustomSwitch from './CustomSwitch'
 import ImageInput from './ImageInput'
 import CustomSlider from './CustomSlider'
 import InputWithIncrement from './InputWithIncrement'
+import UpscalerDropdown from './UpscalerDropdown'
 
 const Container = styled.div`
     display: flex;
@@ -64,6 +65,10 @@ function OptionalSettings(props) {
                 <CustomSwitch disabled={true} checked={variationSeed} onChange={(e) => HandleChange('variationSeed', e)}>Variation Seed</CustomSwitch>
                 {/* Need to add something to set settings to img2img when this is turned on, for now always true */}
                 <CustomSwitch disabled={true} checked={imageInput} onChange={(e) => HandleChange('imageInput', e)}>Image Input</CustomSwitch>
+                <UpscalerDropdown 
+                    value={props.settings.hr_upscaler}
+                    setSettings={(val) => props.setSettings({...props.settings, hr_upscaler : val})}
+                ></UpscalerDropdown>
             </div>
         </Container>
         <ContentContainer>

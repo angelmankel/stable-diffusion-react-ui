@@ -15,18 +15,17 @@
   .row {
     display: flex;
     flex-wrap: wrap;
-    padding: 0 4px;
-  }
+    /* padding: 0 4px; */
+    margin: 10px;  
+}
   
   /* Create four equal columns that sits next to each other */
   .column {
-    flex: 100%;
+    /* flex: 100%; */
     max-width: 100%;
-    padding: 0 4px;
   }
   
   .column img {
-    margin-top: 8px;
     vertical-align: middle;
   }
   
