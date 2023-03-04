@@ -1,82 +1,49 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import Button from '../components/Button'
+// https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png
+// https://replicate.delivery/pbxt/AE5fg6Nbehm5fIkWbIVNsrK1jUEqRr8btVZwoQSEgMemLlpfB/out-0.png
+// https://www.researchgate.net/profile/Andreas-Maier-12/publication/331111167/figure/fig1/AS:726417566359553@1550202852411/Example-images-of-size-512x512-px-approx-128x128m-from-the-canine-cutaneous-mast-cell.ppm
+// https://xmple.com/wallpaper/linear-highlight-red-gradient-black-512x512-c2-000000-8b0000-l-50-a-270-f-21.svg
+// I want a functional react component called ImageCanvas that will display one image of an array of images at a time. The user should be able to press the left and right arrow keys to switch between the different images. The component should utilize css flex box and should fill all the remaining space. Assume the parent div it will be a child of will have a static height.
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-`
+import React, { useState, useEffect } from 'react';
 
-const InnerContainer = styled.div`
-    margin: 10px;
-    flex-grow: 1;
-    overflow-y: auto;
+const ImageCanvas = ({ images }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-
-    justify-content: center;
-    flex-wrap: wrap;
-`
-
-const StyledImage = styled.img`
-    flex-grow: 1;
-    object-fit: contain;
-    max-height: 100%;
-    max-width: 100%;
-`
-const ImgOverlay = styled.div`
-    position: absolute;
-    justify-content: center;
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    gap: 5px;
-    filter: opacity(0);
-    :hover {
-        filter: opacity(1);
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 37) { // Left arrow key
+      setCurrentIndex(currentIndex === 0 ? images.length - 1 : currentIndex - 1);
+    } else if (e.keyCode === 39) { // Right arrow key
+      setCurrentIndex((currentIndex + 1) % images.length);
     }
+  };
 
-    transition: filter 0.50s ease-out;
-`
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
 
-function Image(props) {
-    return (
-        <StyledImage src={props.src} alt="" />
-    )
-}
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  });
 
-function ImageCanvas(props) {
- 
-    function Images () {
-        
-        if (props.currentImage !== null) {
-            const images = props.currentImage.map((image, index) =>
-                <Image key={index} src={image} alt="" />
-            )
+  const currentImage = images[currentIndex];
 
-            return images
-        }
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+      }}
+    >
+      <img
+        src={currentImage}
+        alt={`Image ${currentIndex + 1}`}
+        style={{ objectFit: 'contain', flex: 1, maxHeight: '100%' }}
+      />
+    </div>
+  );
+};
 
-        return null
-    }
-    
-    return (
-        <Container>
-            <InnerContainer>           
-                <ImgOverlay>
-                    <Button>Download</Button>
-                    <Button>Edit</Button>
-                    <Button>Upscale</Button>
-                    <Button>Info</Button>
-                    <Button>Delete</Button>
-                </ImgOverlay> 
-                <Images />
-            </InnerContainer>
-        </Container>
-    )
-}
 
-export default ImageCanvas
+export default ImageCanvas;

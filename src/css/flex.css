@@ -25,14 +25,15 @@
 }
 
 .col-2 {
+    background-color: aqua;
     flex-grow: 1;
-    /* flex-shrink: 1; */
+    overflow-y: scroll;
 }
 
 .col-3 {
     /* width: 512px; */
     width: 15%;
-    flex-shrink: 1;
+    flex-shrink: 0;
 }
 
 .settings {

@@ -20,9 +20,9 @@ module.exports = function(app) {
     })
   )
   app.use(
-    '/txt2img',
+    '/jobs',
     createProxyMiddleware({
-      target: 'http://localhost:3001',
+      target: 'http://localhost:3006',
       changeOrigin: true,
     })
   )

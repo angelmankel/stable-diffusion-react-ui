@@ -14,6 +14,7 @@ import SecondaryNavbar from './components/SecondaryNavbar';
 import GenerationSettings from './components/GenerationSettings';
 import ImageCanvas from './windows/ImageCanvas';
 import Gallery from './components/Gallery';
+import Image from './components/Image.jsx';
 
 const playAudio = () => {
   let audio = new Audio(Notif)
@@ -36,10 +37,10 @@ function App() {
   const [defaultSettings, setDefaultSettings] = useState(
     {
       "enable_hr": false,
-      "prompt": "stone walls, overgrowth, jungle, sunny, god rays, 4k, 8k, dramatic lighting, Art Station, Award Winning, unreal engine, HDR, Ray Tracing, RTX, intricate designs, dim lighting, epic mural, modern art",
-      "seed": 6784558,
+      "prompt": "an epic landscape",
+      "seed": -1,
       "batch_size": 1,
-      "steps": 20,
+      "steps": 1,
       "cfg_scale": 7,
       "width": 512,
       "height": 512,
@@ -53,11 +54,15 @@ function App() {
 
   const [settings, setSettings] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
   const [loading, setLoading] = useState(false)
-  const [currentImage, setCurrentImage] = useState(null)
+  const [currentImage, setCurrentImage] = useState([
+    'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
+     'https://replicate.delivery/pbxt/AE5fg6Nbehm5fIkWbIVNsrK1jUEqRr8btVZwoQSEgMemLlpfB/out-0.png',
+      'https://www.researchgate.net/profile/Andreas-Maier-12/publication/331111167/figure/fig1/AS:726417566359553@1550202852411/Example-images-of-size-512x512-px-approx-128x128m-from-the-canine-cutaneous-mast-cell.ppm'
+  ])
   const [inputImage, setInputImage] = useState(null)
   const [progress, setProgress] = useState(0.01)
   const [galleryImgs, setgalleryImgs] = useState(null)
-  const [progressTickRate, setProgressTickRate] = useState(500)
+  const [progressTickRate, setProgressTickRate] = useState(1000)
   const [options, setOptions] = useState(
     {
       "jpeg_quality": 80,
@@ -135,22 +140,28 @@ function App() {
   }
 
   function Generate() {
+    var data = settings
+    data.jobID = new Date().getTime().toString() + Math.random().toString().substr(2, 5);
+    data = JSON.stringify(data)
 
-    fetch("/txt2img", {
-      method: 'POST',
-      headers: {
+    var config = {
+      method: 'post',
+      url: '/jobs',
+      headers: { 
         'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(settings)
-      })
-      .then(response => response.json())
-      .then(images =>  {
-        setCurrentImage(images)
-      })
-      // Make this only get the last image and not the entire library again
-      .then(() => GetImageLibrary())
-      .then(() => setLoading(false))
-      .then(() => playAudio())
+      },
+      data : data
+    };
+    
+    axios(config)
+    .then((response) => {
+      setCurrentImage(response.data.images)
+    })
+    .then(() => setLoading(false))
+    .then(() => playAudio())
+    .catch(function (error) {
+      console.log(error);
+    });
 
     setLoading(true)
   }
@@ -192,24 +203,24 @@ function App() {
   }
 
   useEffect(() => {
-    GetImageLibrary()
+    //GetImageLibrary()
   }, [])
 
   useEffect(() => {
     
-    fetch("/gen-settings")
-    .then((result) => result.json())
-    .then((result) => setSettings(JSON.parse(result[0].gen_settings_inst)))
-    .then(() => console.log("Settings Loaded!"))
+    // fetch("/gen-settings")
+    // .then((result) => result.json())
+    // .then((result) => setSettings(JSON.parse(result[0].gen_settings_inst)))
+    // .then(() => console.log("Settings Loaded!"))
 
   }, [])
   
   useEffect(() => {
-    axios({
-      method: 'post',
-      url: '/gen-settings',
-      data: settings
-    })
+    // axios({
+    //   method: 'post',
+    //   url: '/gen-settings',
+    //   data: settings
+    // })
   }, [settings])
 
   useEffect(() => {
@@ -222,38 +233,38 @@ function App() {
   }, [])
 
   useEffect(() => {
-    axios({
-      method: 'post',
-      url: '/config',
-      data: options
-    }).then(() => SetModel(options.sd_model_checkpoint))
+    // axios({
+    //   method: 'post',
+    //   url: '/config',
+    //   data: options
+    // }).then(() => SetModel(options.sd_model_checkpoint))
   }, [options])
 
   useEffect(() => {
 
-    const interval = setInterval(() => {
+    // const interval = setInterval(() => {
 
-      fetch("/sdapi/v1/progress?skip_current_image=false")
-      .then((result) => result.json())
-      .then((result) => {
-        if (result.progress > 0.01) {
+    //   fetch("/sdapi/v1/progress?skip_current_image=false")
+    //   .then((result) => result.json())
+    //   .then((result) => {
+    //     if (result.progress > 0.01) {
 
-          setCurrentImage(() => {
-            return [`data:image/png;charset=utf-8;base64,${result.current_image}`]
-          }) 
+    //       setCurrentImage(() => {
+    //         return [`data:image/png;charset=utf-8;base64,${result.current_image}`]
+    //       }) 
 
-          setProgress(result.progress)
-        }
-      })
-      .catch((error) => {
-        console.log("No connection to SD:", error)
-      })
+    //       setProgress(result.progress)
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log("No connection to SD:", error)
+    //   })
 
-    }, progressTickRate)
+    // }, progressTickRate)
 
-    return () => {
-      clearInterval(interval)
-    }
+    // return () => {
+    //   clearInterval(interval)
+    // }
 
   }, [])
 
@@ -262,7 +273,7 @@ function App() {
       {/* <div className='main-nav'>
         <Navbar />
       </div> */}
-
+      
       <div className='secondary-nav'>
         <SecondaryNavbar Interrupt={Interrupt} progress={progress} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
       </div>
@@ -272,15 +283,15 @@ function App() {
         <div className='col-1'>
           <GenerationSettings settings={settings} inputImage={inputImage} setSettings={setSettings} className='settings' />
         </div>
-          
+        
         <div className='col-2'>
-          <ImageCanvas currentImage={currentImage} settings={settings} setSettings={setSettings} />
+          <ImageCanvas overlayWidth={100} images={currentImage} />
         </div>
         
         <div className='col-3'>
           <Gallery galleryImgs={galleryImgs} setCurrentImage={setCurrentImage} setSettings={setSettings}/>
         </div>
-      
+
       </div>
     </Container>
   )
