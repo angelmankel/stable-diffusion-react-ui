@@ -38,7 +38,7 @@ function SecondaryNavbar(props) {
 
   return (
     <Nav>
-      <div className='buttons-panel'>
+      {/* <div className='buttons-panel'>
         <ModelDropdown 
             value={props.options.sd_model_checkpoint}
             setOptions={(val) => props.setOptions({...props.options, sd_model_checkpoint : val})}
@@ -51,7 +51,7 @@ function SecondaryNavbar(props) {
 
         <GenerateButton onClick={props.Generate}>{Spinner ? `Generating...${Math.round(props.progress * 100) / 100  * 100}%` : "Generate"}</GenerateButton>
         <CancelButton onClick={props.Interrupt}>Cancel</CancelButton>
-      </div>
+      </div> */}
       <div className='prompt-panel'>
         <TextArea text={props.settings.prompt} setSettings={(val) => props.setSettings({...props.settings, prompt : val})}/>
         <TextArea text={props.settings.negative_prompt} setSettings={(val) => props.setSettings({...props.settings, negative_prompt : val})}/>

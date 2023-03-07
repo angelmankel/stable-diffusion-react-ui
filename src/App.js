@@ -15,6 +15,7 @@ import GenerationSettings from './components/GenerationSettings';
 import ImageCanvas from './windows/ImageCanvas';
 import Gallery from './components/Gallery';
 import Image from './components/Image.jsx';
+import ImageButtons from './components/ImageButtons';
 
 const playAudio = () => {
   let audio = new Audio(Notif)
@@ -55,9 +56,9 @@ function App() {
   const [settings, setSettings] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
   const [loading, setLoading] = useState(false)
   const [currentImage, setCurrentImage] = useState([
-    'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
-     'https://replicate.delivery/pbxt/AE5fg6Nbehm5fIkWbIVNsrK1jUEqRr8btVZwoQSEgMemLlpfB/out-0.png',
-      'https://www.researchgate.net/profile/Andreas-Maier-12/publication/331111167/figure/fig1/AS:726417566359553@1550202852411/Example-images-of-size-512x512-px-approx-128x128m-from-the-canine-cutaneous-mast-cell.ppm'
+    // 'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
+    // 'https://replicate.delivery/pbxt/AE5fg6Nbehm5fIkWbIVNsrK1jUEqRr8btVZwoQSEgMemLlpfB/out-0.png',
+    // 'https://www.researchgate.net/profile/Andreas-Maier-12/publication/331111167/figure/fig1/AS:726417566359553@1550202852411/Example-images-of-size-512x512-px-approx-128x128m-from-the-canine-cutaneous-mast-cell.ppm',
   ])
   const [inputImage, setInputImage] = useState(null)
   const [progress, setProgress] = useState(0.01)
@@ -70,6 +71,7 @@ function App() {
       "sd_model_checkpoint": "Stable Diffusion\\v1-5-pruned-emaonly.ckpt [cc6cb27103]",
     }
   )
+  const [jobs, setJobs] = useState([])
 
   function Interrupt() {
 
@@ -155,7 +157,9 @@ function App() {
     
     axios(config)
     .then((response) => {
-      setCurrentImage(response.data.images)
+      console.log(response)
+      const newImage = response.data.images;
+      setCurrentImage((prevImages) => [newImage].concat(prevImages));
     })
     .then(() => setLoading(false))
     .then(() => playAudio())
@@ -181,6 +185,13 @@ function App() {
       .then(result => {
         setgalleryImgs(result)
       })
+  }
+
+  function CompareImages() {
+    if (currentImage.length >= 2) {
+      const [firstImage, secondImage, ...restImages] = currentImage;
+      setCurrentImage([secondImage, firstImage, ...restImages]);
+    }
   }
 
   function SetModel(model) {
@@ -270,9 +281,9 @@ function App() {
 
   return (  
     <Container>
-      {/* <div className='main-nav'>
+      <div className='main-nav'>
         <Navbar />
-      </div> */}
+      </div>
       
       <div className='secondary-nav'>
         <SecondaryNavbar Interrupt={Interrupt} progress={progress} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
@@ -285,7 +296,8 @@ function App() {
         </div>
         
         <div className='col-2'>
-          <ImageCanvas overlayWidth={100} images={currentImage} />
+          <ImageButtons Interrupt={Interrupt} progress={progress} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary} images={currentImage} CompareImages={CompareImages}/>
+          <ImageCanvas images={currentImage} />
         </div>
         
         <div className='col-3'>
