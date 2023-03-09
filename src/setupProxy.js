@@ -27,6 +27,13 @@ module.exports = function(app) {
     })
   )
   app.use(
+    '/progress',
+    createProxyMiddleware({
+      target: 'http://localhost:3006',
+      changeOrigin: true,
+    })
+  )
+  app.use(
     '/gen-settings',
     createProxyMiddleware({
       target: 'http://localhost:3001',
