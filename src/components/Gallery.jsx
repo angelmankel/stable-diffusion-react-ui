@@ -10,9 +10,6 @@ const Container = styled.div`
     background-color: var(--secondary-panel-color);
     padding-top: 10px;
     padding-bottom: 10px;
-    
-    /* remove this is if the gallery is broken */
-    height: 100%;
 `;
 
 const Row = styled.div`

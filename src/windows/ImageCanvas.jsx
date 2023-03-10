@@ -88,6 +88,7 @@ import styled from 'styled-components';
     `;
 
 const ImageCanvas = ({ images }) => {
+
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [lastImage, setComparedImages] = useState(images.length > 1 ? images[1] : null);
 
@@ -124,7 +125,7 @@ const ImageCanvas = ({ images }) => {
                             <h3 style={{color: "white"}}>Workspace <Count>{currentImageIndex + 1} / {images.length}</Count></h3>
                         </div>
                         <div style={{flexGrow: 1}}>
-                            <button>History</button>
+                            <button>images</button>
                             <button>Current Images</button>
                             <button>Input Images</button>
                             <button>Favorites</button>

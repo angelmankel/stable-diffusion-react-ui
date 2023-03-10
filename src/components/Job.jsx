@@ -2,96 +2,138 @@ import React from 'react'
 import axios from 'axios';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { io } from "socket.io-client";
+import { faCircleRadiation } from '@fortawesome/free-solid-svg-icons';
+import CustomProgressBar from './CustomProgressBar';
 
 function HandleClick(job) {
     console.log(job)
 }
 
-function Job({ job }) {
+function Job({ job, setJobs }) {
     
-    const [img, setImg] = useState("https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png");
-    const [progress, setProgress] = useState(null);
+    const JobContainer = styled.div`
+        color: white;  
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        padding: 10px;
+        flex-grow: 1;
+        gap: 5px;
 
-    // set up interval to get job progress from /progress endpoint
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         axios.get(`/progress`)
-    //         .then(res => {
-    //             // console.log(res.data)
-    //             let keys = Object.keys(res.data)
+        cursor: pointer;
+        transition: background-color 0.20s ease;
+        &:hover {
+            background-color: #c4c4c494;
+        }
 
-    //             for (let i = 0; i < keys.length; i++) {
-    //                 // console.log(res.data[keys[i]].current_image)
-    //                 if (keys[i] === job.job_id) {
-    //                     setImg(`data:image/png;base64,${res.data[keys[i]].current_image}`)
-    //                     setProgress(res.data[keys[i]].progress)
-    //                 }
+        user-select: none;
+        background-color: rgba(144, 144, 144, 0.431);
+    `;
 
-    //                 // res.data[keys[i]].state.id = job.job_id
-    //                 // console.log(res.data[keys[i]])
-    //                 // setImg(`data:image/png;base64,${res.data[keys[i]].current_image}`)
-    //             }
-
-    //         })
-    //     }, 1000);
-    //     return () => clearInterval(interval);
-    // }, []);
+    const [img, setImg] = useState(null);
+    const [currentProgress, setCurrentProgress] = useState({ progress: 0 });
+    const [jobID, setJobID] = useState(job.job_id);
+    const [livePreview, setLivePreview] = useState(true);
 
     useEffect(() => {
-    const interval = setInterval(() => {
-        axios.get(`/progress`)
-        .then(res => {
-        let progressData = res.data[job.job_id];
-        if (progressData) {
-            setImg(`data:image/png;base64,${progressData.current_image}`)
-            setProgress(progressData.progress)
-        }
-        })
-    }, 1000);
-    return () => clearInterval(interval);
-    }, [job.job_id]);
+        const socket = io("http://localhost:5000");
+        let jobCompleted = false;
 
-    
+        if (livePreview) {
+            socket.on("jobProgress", (data) => {               
+                if (!jobCompleted && jobID === data.job_id) {
+                    let pg = JSON.parse(data.progress);
+                    console.log(pg)
+                    setCurrentProgress(pg);
+                    setImg(`data:image/png;base64,${pg.current_image}`);
+                }
+            });
+        }
+        
+        socket.on("jobResult", (data) => {
+            if (jobID === JSON.parse(data).job_id) {
+                let imgs = JSON.parse(data).images;
+                setImg(imgs[0]);
+                setCurrentProgress({ progress: 1});
+                setJobs((prevJobs) => {
+                    return prevJobs.map((job) => {
+                        if (job.job_id === jobID) {
+                            job.result = imgs[0];
+                        }
+                        return job;
+                    })
+                })
+                jobCompleted = true;
+                socket.off('jobProgress')
+            }
+        });
+        
+        socket.on("disconnect", () => setCurrentProgress("server disconnected"));
+
+        return () => {
+            socket.off('jobProgress');
+        }
+    }, []);
+        
     return (
-        <JobContainer onClick={() => HandleClick(job)}>
+        <JobContainer img={img}>
+            <RecallButtons>
+                <Pill tooltip={job.seed}>Seed</Pill>
+                <Pill tooltip={job.sampler_index}>Sampler</Pill>
+                <Pill tooltip={job.job_id}>Job ID</Pill>
+                <Pill tooltip={job.height}>Height</Pill>
+                <Pill tooltip={job.width}>Width</Pill>
+                <Pill tooltip={job.prompt}>Prompt</Pill>
+                <Pill tooltip={job.negative_prompt}>Negative Prompt</Pill>
+            </RecallButtons>
             <Row>
-                <InfoText>Seed: {job.seed}</InfoText>
-                <InfoText>Sampler: {job.sampler_index}</InfoText> 
-                <InfoText>Progress: {progress}</InfoText>
+                {img ? <Thumbnail src={img} /> : <div>Queued...</div> }
             </Row>
-            {/* "https://picsum.photos/512" */}
-            <Thumbnail src={img} /> 
-            <Row>
-                <InfoText>{job.job_id}</InfoText>
-            </Row>
+            <CustomProgressBar progress={currentProgress.progress * 100} />
         </JobContainer>
     )
+    
 
 }
 
-const JobContainer = styled.div`
-    background-color: #9f6bda5c;
-    backdrop-filter: blur(10px);
-    color: white;  
+const RecallButtons = styled.div`
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
     align-items: center;
-    border-radius: 10px;
-    padding: 10px;
-
-    cursor: pointer;
-    transition: background-color 0.20s ease;
-    &:hover {
-        background-color: #9f6bdafd;
-    }
-
-    user-select: none;
+    justify-content: center;
+    flex-wrap: wrap;
 `
-const InfoText = styled.div`
-    font-size: 0.8rem;
-    padding: 2px;
-`
+
+const Pill = styled.div`
+  display: inline-block;
+  background-color: #28191966;
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.25em 0.5em;
+  font-size: 0.8em;  
+  position: relative;
+  cursor: pointer;
+  &:hover::after {
+    content: "${(props) => props.tooltip}";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5em;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 1.2em;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+`;
+
+
+
 
 const Thumbnail = styled.img`
     max-width: 75%;
@@ -106,6 +148,7 @@ const Row = styled.div`
     flex-direction: row;
     gap: 5px;
     align-items: center;
+    justify-content: center;
 `
 export default Job
 

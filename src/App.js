@@ -15,8 +15,10 @@ import GenerationSettings from './components/GenerationSettings';
 import ImageCanvas from './windows/ImageCanvas';
 import Gallery from './components/Gallery';
 import Image from './components/Image.jsx';
-import ImageButtons from './components/ImageButtons';
 import JobsQueue from './components/JobsQueue';
+import ImageButtons from './components/ImageButtons';
+import SSE from './components/SSE';
+import Job from './components/Job';
 
 const playAudio = () => {
   let audio = new Audio(Notif)
@@ -53,16 +55,20 @@ function App() {
       "hr_upscaler": "SwinIR_4x",
     }
   )
-
   const [settings, setSettings] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
   const [loading, setLoading] = useState(false)
   const [history, setHistory] = useState([
-    // 'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
+    'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
     // 'https://replicate.delivery/pbxt/AE5fg6Nbehm5fIkWbIVNsrK1jUEqRr8btVZwoQSEgMemLlpfB/out-0.png',
     // 'https://www.researchgate.net/profile/Andreas-Maier-12/publication/331111167/figure/fig1/AS:726417566359553@1550202852411/Example-images-of-size-512x512-px-approx-128x128m-from-the-canine-cutaneous-mast-cell.ppm',
   ])
+  const [currentImage, setCurrentImage] = useState([
+    'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
+     'https://replicate.delivery/pbxt/AE5fg6Nbehm5fIkWbIVNsrK1jUEqRr8btVZwoQSEgMemLlpfB/out-0.png',
+      'https://www.researchgate.net/profile/Andreas-Maier-12/publication/331111167/figure/fig1/AS:726417566359553@1550202852411/Example-images-of-size-512x512-px-approx-128x128m-from-the-canine-cutaneous-mast-cell.ppm'
+  ])
+  const [jobs, setJobs] = useState([])
   const [inputImage, setInputImage] = useState(null)
-  const [progress, setProgress] = useState(0.01)
   const [galleryImgs, setgalleryImgs] = useState(null)
   const [progressTickRate, setProgressTickRate] = useState(1000)
   const [options, setOptions] = useState(
@@ -72,7 +78,6 @@ function App() {
       "sd_model_checkpoint": "Stable Diffusion\\v1-5-pruned-emaonly.ckpt [cc6cb27103]",
     }
   )
-  const [jobs, setJobs] = useState([])
 
   function Interrupt() {
 
@@ -142,6 +147,13 @@ function App() {
       .then(() => playAudio())
   }
 
+  function CompareImages() {
+    if (history.length >= 2) {
+      const [firstImage, secondImage, ...restImages] = history;
+      setHistory([secondImage, firstImage, ...restImages]);
+    }
+  }
+
   function Generate() {
 
     var data = settings
@@ -159,17 +171,25 @@ function App() {
     
     // copy the jobs array and add the new job, then setJobs to the new array
     let newArr = [...jobs]
-    newArr.unshift(data)
+    newArr.unshift(JSON.parse(data))
     setJobs(newArr)
     
     axios(config)
     .then((response) => {
       const newImage = response.data.images;
       setHistory((prevImages) => [newImage].concat(prevImages));
+      return response
+    })
+    .then((response) => {
+      // console.log("removingJob")
+      // // remove the job from the jobs array
+      // let newArr = [...jobs]
+      // newArr = newArr.filter(job => job.key !== JSON.parse(data).job_id)
+      // setJobs(newArr)
     })
     .then(() => setLoading(false))
     .then(() => playAudio())
-    // .then(() => clearInterval(progressInterval))
+    
     .catch((error) => {
       console.log(error);
     });
@@ -194,13 +214,6 @@ function App() {
       })
   }
 
-  function CompareImages() {
-    if (history.length >= 2) {
-      const [firstImage, secondImage, ...restImages] = history;
-      setHistory([secondImage, firstImage, ...restImages]);
-    }
-  }
-
   function SetModel(model) {
 
     // Change this to a designated model spinner
@@ -219,10 +232,6 @@ function App() {
       .then(() => setLoading(false))
  
   }
-
-  useEffect(() => {
-    //GetImageLibrary()
-  }, [])
 
   useEffect(() => {
     
@@ -293,7 +302,7 @@ function App() {
       </div>
       
       <div className='secondary-nav'>
-        <SecondaryNavbar Interrupt={Interrupt} progress={progress} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
+        <SecondaryNavbar Interrupt={Interrupt} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
       </div>
 
       <div className='main-container'>
@@ -303,13 +312,13 @@ function App() {
         </div>
         
         <div className='col-2'>
-          <ImageButtons Interrupt={Interrupt} progress={progress} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary} images={history} CompareImages={CompareImages}/>
+          <ImageButtons Interrupt={Interrupt} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary} images={history} CompareImages={CompareImages}/>
           <ImageCanvas images={history} />
         </div>
         
         <div className='col-3'>
           {/* <Gallery galleryImgs={galleryImgs} setCurrentImage={setHistory} setSettings={setSettings}/> */}
-          <JobsQueue jobs={jobs} />
+          <JobsQueue jobs={jobs} setJobs={setJobs} />
         </div>
 
       </div>

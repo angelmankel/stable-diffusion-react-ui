@@ -34,6 +34,17 @@ module.exports = function(app) {
     })
   )
   app.use(
+    "/socket.io",
+    createProxyMiddleware({
+      target: "http://localhost:3007",
+      changeOrigin: true,
+      ws: true,
+      pathRewrite: {
+        "^/socket.io": "",
+      },
+    })
+  );
+  app.use(
     '/gen-settings',
     createProxyMiddleware({
       target: 'http://localhost:3001',
