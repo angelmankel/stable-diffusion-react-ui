@@ -13,12 +13,9 @@ import Navbar from './components/Navbar.jsx';
 import SecondaryNavbar from './components/SecondaryNavbar';
 import GenerationSettings from './components/GenerationSettings';
 import ImageCanvas from './windows/ImageCanvas';
-import Gallery from './components/Gallery';
-import Image from './components/Image.jsx';
 import JobsQueue from './components/JobsQueue';
 import ImageButtons from './components/ImageButtons';
-import SSE from './components/SSE';
-import Job from './components/Job';
+
 
 const playAudio = () => {
   let audio = new Audio(Notif)
@@ -40,7 +37,6 @@ function App() {
 
   const [defaultSettings, setDefaultSettings] = useState(
     {
-      "enable_hr": false,
       "prompt": "an epic landscape",
       "seed": -1,
       "batch_size": 1,
@@ -52,7 +48,12 @@ function App() {
       "tiling": false,
       "negative_prompt": "(bad_prompt:0.8)",
       "sampler_index": "Euler a",
-      "hr_upscaler": "SwinIR_4x",
+      
+      "enable_hr": true,
+      "hr_upscaler": "R-ESRGAN 4x+ Anime6B",
+      "hr_scale": 2,
+      "hr_second_pass_steps": 20,
+      "denoising_strength": 0.7,
     }
   )
   const [settings, setSettings] = useState(defaultSettings) // need to check if this is the first time opening the app, if not, use the last settings you used
@@ -158,6 +159,7 @@ function App() {
 
     var data = settings
     data.job_id = new Date().getTime().toString() + Math.random().toString().substr(2, 5);
+    data.jobType = "/txt2img"
     data = JSON.stringify(data)
 
     var config = {

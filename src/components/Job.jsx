@@ -71,7 +71,7 @@ function Job({ job, setJobs }) {
             }
         });
         
-        socket.on("disconnect", () => setCurrentProgress("server disconnected"));
+        // socket.on("disconnect", () => setCurrentProgress("server disconnected"));
 
         return () => {
             socket.off('jobProgress');
