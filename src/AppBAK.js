@@ -72,6 +72,8 @@ function App() {
   ])
   const [jobs, setJobs] = useState([])
   const [inputImage, setInputImage] = useState(null)
+  const [galleryImgs, setgalleryImgs] = useState(null)
+  const [progressTickRate, setProgressTickRate] = useState(1000)
   const [options, setOptions] = useState(
     {
       "jpeg_quality": 80,
@@ -80,63 +82,77 @@ function App() {
     }
   )
 
-  const [parameters, setParameters] = useState([{
-    "prompt": "an epic landscape",
-    "seed": -1,
-    "batch_size": 1,
-    "steps": 10,
-    "cfg_scale": 7,
-    "width": 512,
-    "height": 512,
-    "restore_faces": false,
-    "tiling": false,
-    "negative_prompt": "(bad_prompt:0.8)",
-    "sampler_index": "Euler a",
-    "enable_hr": true,
-    "hr_upscaler": "R-ESRGAN 4x+ Anime6B",
-    "hr_scale": 2,
-    "hr_second_pass_steps": 20,
-    "denoising_strength": 0.7,
-  }])
-
-  const [layers, setLayers] = useState([{ 
-    name: 'Layer 1', 
-    id: 1, 
-    visible: true, 
-    opacity: 1, 
-    blendMode: 'normal',
-    type: 'image',
-    image: 'https://www.researchgate.net/profile/R-Bastiaans/publication/242667254/figure/fig1/AS:298479747387394@1448174525356/Test-image-of-512x512-pixels-containing-1024-particles.png',
-    width: 512,
-    height: 512,
-  }])
+  
+  const [layers, setLayers] = useState([])
   const [showSidePanel, setShowSidePanel] = useState(true)
-  const [canvasSize, setCanvasSize] = useState({ width: 1024, height: 1024 })
-  const [selectedLayer, setSelectedLayer] = useState(null)
-  const [modifiers, setModifiers] = useState([
-    { value: 'highres', strength: 1.4, type: 'positive' },
-    { value: 'lowres', strength: 0.7, type: 'positive' },
-    { value: 'mediumres', strength: 1.0, type: 'positive' },
-    { value: 'ultrares', strength: 1.8, type: 'positive' },
-    { value: 'megares', strength: 1.6, type: 'positive' },
-    { value: 'superres', strength: 1.2, type: 'positive' },
-    { value: 'extrahighres', strength: 1.9, type: 'positive' },
-    { value: 'maxres', strength: 2.0, type: 'positive' },
-    { value: 'minres', strength: 0.1, type: 'positive' },
-    { value: 'standardres', strength: 0.5, type: 'positive' }
-  ])
-  const [showStrength, setShowStrength] = useState(false)
-  const [negativeModifiers, setNegativeModifiers] = useState([
-    { value: 'lowres', strength: 0.3, type: 'negative' },
-    { value: 'dark', strength: 0.2, type: 'negative' },
-    { value: 'bright', strength: 0.7, type: 'negative' },
-    { value: 'noisy', strength: 0.5, type: 'negative' },
-    { value: 'blurry', strength: 0.4, type: 'negative' },
-    { value: 'shaky', strength: 0.6, type: 'negative' },
-    { value: 'flickering', strength: 0.9, type: 'negative' },
-    { value: 'overexposed', strength: 0.1, type: 'negative' },
-    { value: 'underexposed', strength: 0.8, type: 'negative' }
-  ])
+
+  function Interrupt() {
+
+    var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
+    }
+
+    fetch("/sdapi/v1/interrupt", requestOptions)
+  }
+
+  function SaveImageToDB(img) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(img),
+      redirect: 'follow',
+    }
+
+    fetch("/library", requestOptions)
+  }
+
+  function UpscaleImage(img) {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(
+        {
+          "resize_mode": 0,
+          "show_extras_results": true,
+          "gfpgan_visibility": 0,
+          "codeformer_visibility": 0,
+          "codeformer_weight": 0,
+          "upscaling_resize": 2,
+          "upscaler_1": "SwinIR_4x",
+          "extras_upscaler_2_visibility": 0,
+          "image": JSON.stringify(img.images[0])
+        }
+      ),
+      redirect: 'follow'
+    }
+
+    fetch("/sdapi/v1/extra-single-image", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        setHistory(`data:image/png;charset=utf-8;base64,${result.image}`)
+        return result
+      })
+      .then((result) => {
+        SaveImageToDB(result)
+        return result.image
+      })
+      .then((result) => {
+        let newArr = [...galleryImgs]
+        newArr.unshift(`data:image/png;charset=utf-8;base64,${result}`)
+        setgalleryImgs(newArr)
+      })
+      .then(() => setLoading(false))
+      .then(() => playAudio())
+  }
 
   function CompareImages() {
     if (history.length >= 2) {
@@ -202,7 +218,7 @@ function App() {
     fetch("/library", requestOptions)
       .then(response => response.json())      
       .then(result => {
-        // setgalleryImgs(result)
+        setgalleryImgs(result)
       })
   }
 
@@ -293,34 +309,24 @@ function App() {
         <Navbar />
       </div>
       
-      {/* <div className='secondary-nav'>
-        <SecondaryNavbar setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate}/>
-      </div> */}
+      <div className='secondary-nav'>
+        <SecondaryNavbar Interrupt={Interrupt} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary}/>
+      </div>
 
       <div className='main-container'>
         
         <div className='col-1'>
-        <GenerationSettings 
-          inputImage={inputImage} 
-          modifiers={modifiers}
-          setModifiers={setModifiers}
-          showStrength={showStrength}
-          setShowStrength={setShowStrength}
-          negativeModifiers={negativeModifiers}
-          setNegativeModifiers={setNegativeModifiers}
-          parameters={parameters}
-          setParameters={setParameters}
-        />
+          <GenerationSettings settings={settings} inputImage={inputImage} setSettings={setSettings} className='settings' />
         </div>
         
         <div className='col-2'>
-          <Canvas layers={layers} setLayers={setLayers} canvasSize={canvasSize} setCanvasSize={setCanvasSize} />
+          {/* <ImageButtons Interrupt={Interrupt} setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate} GetImageLibrary={GetImageLibrary} images={history} CompareImages={CompareImages}/> */}
+          {/* <ImageCanvas images={history} /> */}
+          <Canvas layers={layers} />
         </div>
         
         <div className='col-3'>
-          {showSidePanel ? 
-            <SidePanel layers={layers} setLayers={setLayers} /> 
-          : null} 
+          {showSidePanel ? <SidePanel jobs={jobs} setJobs={setJobs} /> : null} 
         </div>
 
       </div>

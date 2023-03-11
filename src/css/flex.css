@@ -13,8 +13,8 @@
 .main-container {
     display: flex;
     /* use this one when you bring the main navbar back */
-    height: calc(var(--doc-height) - calc(var(--navbar-height) + var(--secondary-navbar-height)));
-    /* height: calc(var(--doc-height) - var(--secondary-navbar-height)); */
+    /* height: calc(var(--doc-height) - calc(var(--navbar-height) + var(--secondary-navbar-height))); */
+    height: var(--doc-height);
 }
 
 .col-1 {
@@ -34,6 +34,16 @@
     flex-shrink: 0;
     background-color: rgb(110, 106, 127);
     overflow-y: auto;
+    
+    /* Flex for child elements */
+    display: flex;
+}
+
+/* if the width is less than 1000 pixels, set the width to 25% */
+@media screen and (max-width: 1400px) {
+    .col-3 {
+      width: 25%;
+    }
 }
 
 .settings {
