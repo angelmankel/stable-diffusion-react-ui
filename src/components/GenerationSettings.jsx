@@ -5,8 +5,11 @@ import styled from 'styled-components';
 import Modal from './Modal';
 import ModifierPill from './ModifierPill';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faC, faCheck, faRedo, faTimes, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faC, faCheck, faCropSimple, faRedo, faTimes, faUndo } from '@fortawesome/free-solid-svg-icons';
 import PromptComponent from './PromptComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { setParameters } from '../features/parameters/parametersSlice';
+
 
 const OuterContainer = styled.div`
     height: 100%;
@@ -186,6 +189,8 @@ const PromptButton = styled.button`
 //     );
 //   }
 
+
+
 function GenerationSettings({
     settings,
     inputImage,
@@ -197,16 +202,16 @@ function GenerationSettings({
     setShowStrength,
     negativeModifiers,
     setNegativeModifiers,
-    parameters,
-    setParameters
     }){
+
+    const dispatch = useDispatch();
+    const parameters = useSelector(state => state.parameters.parameters);
+    console.log(parameters)
 
     const [showModal, setShowModal] = useState(false);
     const [modifierType, setModifierType] = useState(null);
-    const [promptValue, setPromptValue] = useState(parameters[parameters.length - 1].prompt);
-    const [negativePromptValue, setNegativePromptValue] = useState(parameters[parameters.length - 1].negative_prompt);
-
-    let typingTimer = null;
+    const [prompt, setPrompt] = useState('parameters[parameters.length - 1].prompt');
+    const [negativePrompt, setNegativePrompt] = useState('parameters[parameters.length - 1].negative_prompt');
 
     const handleOpenModal = () => {
         setShowModal(true)
@@ -242,32 +247,23 @@ function GenerationSettings({
             setNegativeModifiers(negativeModifiers.filter((mod) => mod !== modifier))
     }
 
-    const handlePromptChange = (e) => {
-        clearTimeout(typingTimer);
-        setPromptValue(e.target.value);
+    const handleSetNegativePrompt = () => {
+        // make a copy of the current parameters from the store
+        const currentParameters = JSON.parse(JSON.stringify(parameters));
+        const newParameters = JSON.parse(JSON.stringify(currentParameters[0]));
+        newParameters.negative_prompt = negativePrompt
+    
+        // push the new temp object to the parameters array
+        currentParameters.push(newParameters);
 
-        if (promptValue[promptValue.length - 1] === " ") {
-            console.log('SPACE')
-            const newParameters = parameters.slice(0, 10);
-            setParameters([...newParameters, { ...parameters[0], prompt: promptValue }]);
-        }
-    }
-
-    useEffect(() => {
-        if (promptValue[promptValue.length - 1] === " ") {
-            console.log('Adding item to parameters history')
-            const newParameters = parameters.slice(0, 10);
-            setParameters([...newParameters, { ...parameters[0], prompt: promptValue }]);
-        }
-    }, [promptValue]);
-
-    console.log(parameters)
-
+        dispatch(setParameters(newParameters));
+    };
+    
     return (
         <OuterContainer>
             <Modal handleAddModifier={handleAddModifier} setShowModal={setShowModal} isOpen={showModal} onClose={handleCloseModal} setNegativeModifiers={setNegativeModifiers} setModifiers={setModifiers}>New {modifierType === 'negative' ? 'Negative' : null} Modifier</Modal>
             <Container>
-                <PromptComponent parameters={parameters} setParameters={setParameters}>
+                {/* <PromptComponent parameters={parameters} setParameters={setParameters}>
                     <Modifers>
                         <Title>
                             <Label>Modifiers</Label>
@@ -292,13 +288,13 @@ function GenerationSettings({
                             ))}
                         </ModifiersContainer>
                     </Modifers>
-                </PromptComponent>
+                </PromptComponent> */}
                 
                 <NegativePrompt>
                     <Label>Negative Prompt</Label>
-                    <CustomInput />
+                    <CustomInput value={negativePrompt} onChange={(e) => setNegativePrompt(e.target.value)} />
                     <PromptGroup>
-                        <PromptButton color='#198754' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faCheck} /></PromptButton>
+                        <PromptButton onClick={handleSetNegativePrompt} color='#198754' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faCheck} /></PromptButton>
                         <PromptButton color='#dc3545' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faTimes} /></PromptButton>
                         <PromptButton color='#0dcaf0' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faUndo} /></PromptButton>
                         <PromptButton color='#0dcaf0' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faRedo} /></PromptButton>

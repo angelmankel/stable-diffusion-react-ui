@@ -3,6 +3,9 @@ import { useState, useLayoutEffect, useEffect, useRef, useMemo } from 'react'
 import styled from 'styled-components';
 import axios from 'axios';
 
+// REDUX
+import { Parameters } from './components/Parameters';
+
 import './css/Variables.css';
 import './css/flex.css';
 
@@ -17,7 +20,6 @@ import JobsQueue from './components/JobsQueue';
 import ImageButtons from './components/ImageButtons';
 import SidePanel from './components/SidePanel';
 import Canvas from './components/Canvas';
-
 
 const playAudio = () => {
   let audio = new Audio(Notif)
@@ -293,6 +295,8 @@ function App() {
         <Navbar />
       </div>
       
+      <Parameters></Parameters>
+
       {/* <div className='secondary-nav'>
         <SecondaryNavbar setOptions={setOptions} options={options} loading={loading} settings={settings} setSettings={setSettings} Generate={Generate}/>
       </div> */}
