@@ -267,7 +267,15 @@ function GenerationSettings({
         <OuterContainer>
             <Modal handleAddModifier={handleAddModifier} setShowModal={setShowModal} isOpen={showModal} onClose={handleCloseModal} setNegativeModifiers={setNegativeModifiers} setModifiers={setModifiers}>New {modifierType === 'negative' ? 'Negative' : null} Modifier</Modal>
             <Container>
-                <PromptComponent parameters={parameters} setParameters={setParameters}>
+                <Prompt>
+                    <Label>Prompt</Label>
+                    <CustomInput />
+                    <PromptGroup>
+                        <PromptButton color='#198754' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faCheck} /></PromptButton>
+                        <PromptButton color='#dc3545' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faTimes} /></PromptButton>
+                        <PromptButton color='#0dcaf0' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faUndo} /></PromptButton>
+                        <PromptButton color='#0dcaf0' ><FontAwesomeIcon style={{ filter: 'drop-shadow(1px 1px 2px rgb(0, 0, 0))' }} icon={faRedo} /></PromptButton>
+                    </PromptGroup>
                     <Modifers>
                         <Title>
                             <Label>Modifiers</Label>
@@ -292,7 +300,7 @@ function GenerationSettings({
                             ))}
                         </ModifiersContainer>
                     </Modifers>
-                </PromptComponent>
+                </Prompt>
                 
                 <NegativePrompt>
                     <Label>Negative Prompt</Label>
